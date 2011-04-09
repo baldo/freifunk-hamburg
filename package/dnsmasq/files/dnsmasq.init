@@ -113,6 +113,8 @@ dnsmasq() {
 	config_get hostsfile "$cfg" dhcphostsfile
 	[ -e "$hostsfile" ] && append args "--dhcp-hostsfile=$hostsfile"
 
+	config_get_bool keepresolvcf "$cfg" keepresolvcf
+
 	local rebind
 	config_get_bool rebind "$cfg" rebind_protection 1
 	[ $rebind -gt 0 ] && {
@@ -369,8 +371,9 @@ start() {
 	config_foreach dhcp_domain_add domain
 	config_foreach dhcp_add dhcp
 
-	/usr/sbin/dnsmasq $args && {
+	/usr/sbin/dnsmasq $args && [ ! "$keepresolvcf" = "1" ] && {
 		rm -f /tmp/resolv.conf
+		echo "### Created by dnsmasq.init ###" >> /tmp/resolv.conf
 		[ -n "$DOMAIN" ] && echo "search $DOMAIN" >> /tmp/resolv.conf
 		DNS_SERVERS="$DNS_SERVERS 127.0.0.1"
 		for DNS_SERVER in $DNS_SERVERS ; do
@@ -380,7 +383,8 @@ start() {
 }
 
 stop() {
-	[ -f /tmp/resolv.conf ] && {
+	[ -f /tmp/resolv.conf ] && \
+	[ "`head -n1 /tmp/resolv.conf`" = "### Created by dnsmasq.init ###" ] && {
 		rm -f /tmp/resolv.conf
 		ln -s /tmp/resolv.conf.auto /tmp/resolv.conf
 	}

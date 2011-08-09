@@ -1,0 +1,3 @@
+[submodule "env"]
+	path = env
+	url = http://krtek.asta.uni-luebeck.de/git/lffenv.git

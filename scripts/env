@@ -163,6 +163,7 @@ env_switch() {
 	env_init
 	env_ask_sync
 	git checkout "$name" || error "environment '$name' not found"
+	git submodule update --init --recursive
 	env_link_config
 }
 

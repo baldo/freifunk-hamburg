@@ -344,3 +344,26 @@
  		if (!(rates[i].flags & IEEE80211_TX_RC_MCS))
  			return true;
  	}
+--- a/net/mac80211/sta_info.c
++++ b/net/mac80211/sta_info.c
+@@ -796,7 +796,7 @@ static int __must_check __sta_info_destr
+ 		BUG_ON(!sdata->bss);
+ 
+ 		atomic_dec(&sdata->bss->num_sta_ps);
+-		__sta_info_clear_tim_bit(sdata->bss, sta);
++		sta_info_clear_tim_bit(sta);
+ 	}
+ 
+ 	local->num_sta--;
+--- a/drivers/net/wireless/b43/main.c
++++ b/drivers/net/wireless/b43/main.c
+@@ -1611,7 +1611,8 @@ static void handle_irq_beacon(struct b43
+ 	u32 cmd, beacon0_valid, beacon1_valid;
+ 
+ 	if (!b43_is_mode(wl, NL80211_IFTYPE_AP) &&
+-	    !b43_is_mode(wl, NL80211_IFTYPE_MESH_POINT))
++	    !b43_is_mode(wl, NL80211_IFTYPE_MESH_POINT) &&
++	    !b43_is_mode(wl, NL80211_IFTYPE_ADHOC))
+ 		return;
+ 
+ 	/* This is the bottom half of the asynchronous beacon update. */

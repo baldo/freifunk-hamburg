@@ -4,3 +4,6 @@
 [submodule "feeds/packages"]
 	path = feeds/packages
 	url = http://krtek.asta.uni-luebeck.de/git/lffpkg.git
+[submodule "feeds/luci"]
+	path = feeds/luci
+	url = http://krtek.asta.uni-luebeck.de/git/lffluci.git

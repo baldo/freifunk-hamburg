@@ -360,7 +360,7 @@ enable_mac80211() {
 			else
 				offset="0"
 			fi
-			vif_mac="$( printf %02x $((0x$mac_1 + $offset)) ):$mac_2"
+			vif_mac="$( printf %02x $(((0x$mac_1 + $offset) % 0x100 )) ):$mac_2"
 			macidx="$(($macidx + 1))"
 		}
 		[ "$mode" = "ap" ] || ifconfig "$ifname" hw ether "$vif_mac"

@@ -109,10 +109,6 @@ setup_interface () {
 	[ -n "$timesvr" ] && 	change_state network "$ifc" lease_timesrv "$timesvr"
 	[ -n "$hostname" ] &&	change_state network "$ifc" lease_hostname "$hostname"
 	[ -n "$timezone" ] && 	change_state network "$ifc" lease_timezone "$timezone"
-
-
-	# Hotplug
-	env -i ACTION="$1" INTERFACE="$ifc" DEVICE="$ifname" PROTO=dhcp /sbin/hotplug-call iface
 }
 
 

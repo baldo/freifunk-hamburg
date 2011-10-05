@@ -393,6 +393,9 @@ setup_interface() {
 				${vendorid:+-V $vendorid} \
 				-b -p "$pidfile" $broadcast \
 				${dhcpopts:- -O rootpath -R &}
+
+			# Hotplug
+			env -i ACTION="ifup" INTERFACE="$config" DEVICE="$iface" PROTO=dhcp /sbin/hotplug-call iface
 		;;
 		none)
 			setup_interface_none "$iface" "$config"

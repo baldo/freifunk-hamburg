@@ -12,6 +12,7 @@
 /logs
 /feeds
 !/feeds/packages
+!/feeds/luci
 /feeds.conf
 /files
 #/package/feeds

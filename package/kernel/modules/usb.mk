@@ -128,35 +128,6 @@ endef
 
 $(eval $(call KernelPackage,usb-adm5120))
 
-define KernelPackage/usb-etrax
-$(call KernelPackage/usb/Depends,@TARGET_etrax)
-  TITLE:=Support for the ETRAX USB host controller
-  KCONFIG:=CONFIG_ETRAX_USB_HOST \
-	CONFIG_ETRAX_USB_HOST_PORT1=y CONFIG_ETRAX_USB_HOST_PORT2=y
-  FILES:=$(LINUX_DIR)/drivers/usb/host/hc-crisv10.$(LINUX_KMOD_SUFFIX)
-  AUTOLOAD:=$(call AutoLoad,50,hc-crisv10,1)
-endef
-
-define KernelPackage/usb-etrax/description
- Kernel support for the ETRAX USB host controller
-endef
-
-$(eval $(call KernelPackage,usb-etrax))
-
-define KernelPackage/usb-octeon
-$(call KernelPackage/usb/Depends,@TARGET_octeon)
-  TITLE:=Support for the Octeon USB OTG controller
-  KCONFIG:=CONFIG_USB_DWC_OTG
-  FILES:=$(LINUX_DIR)/drivers/usb/host/dwc_otg/dwc_otg.$(LINUX_KMOD_SUFFIX)
-  AUTOLOAD:=$(call AutoLoad,50,dwc_otg)
-endef
-
-define KernelPackage/usb-octeon/description
-  Kernel support for the Octeon USB host controller
-endef
-
-$(eval $(call KernelPackage,usb-octeon))
-
 
 define KernelPackage/usb-isp116x-hcd
 $(call KernelPackage/usb/Depends,@TARGET_ppc40x)
@@ -547,7 +518,8 @@ $(eval $(call KernelPackage,usb-storage))
 define KernelPackage/usb-storage-extras
   SUBMENU:=$(USB_MENU)
   TITLE:=Extra drivers for usb-storage
-  DEPENDS:=@LINUX_2_6 +kmod-usb-storage
+  DEPENDS:=@LINUX_2_6 \
+	+!TARGET_ixp4xx_harddisk||!TARGET_orion_harddisk||!TARGET_x86_olpc:kmod-usb-storage
   KCONFIG:= \
 	CONFIG_USB_STORAGE_ALAUDA \
 	CONFIG_USB_STORAGE_CYPRESS_ATACB \
@@ -708,7 +680,7 @@ $(eval $(call KernelPackage,usb-net-asix))
 
 
 define KernelPackage/usb-net-hso
-$(call KernelPackage/usb-net/Depends,@LINUX_2_6 +!TARGET_rb532||!TARGET_avr32||!TARGET_brcm47xx||!TARGET_s3c24xx||!TARGET_ifxmips||!TARGET_atheros||!TARGET_adm5120||!TARGET_ar7||!TARGET_ppc40x||!TARGET_ixp4xx||!TARGET_rdc:kmod-rfkill)
+$(call KernelPackage/usb-net/Depends,@LINUX_2_6 +!TARGET_rb532||!TARGET_avr32||!TARGET_brcm47xx||!TARGET_lantiq||!TARGET_atheros||!TARGET_adm5120||!TARGET_ar7||!TARGET_ppc40x||!TARGET_ixp4xx||!TARGET_rdc:kmod-rfkill)
   TITLE:=Kernel module for Option USB High Speed Mobile Devices
   KCONFIG:=CONFIG_USB_HSO
   FILES:= \

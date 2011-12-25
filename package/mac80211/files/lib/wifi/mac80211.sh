@@ -206,10 +206,13 @@ find_mac80211_phy() {
 
 scan_mac80211() {
 	local device="$1"
-	local adhoc sta ap monitor mesh
+	local adhoc sta ap monitor mesh disabled
 
 	config_get vifs "$device" vifs
 	for vif in $vifs; do
+		config_get_bool disabled "$vif" disabled 0
+		[ $disabled = 0 ] || continue
+
 		config_get mode "$vif" mode
 		case "$mode" in
 			adhoc|sta|ap|monitor|mesh)
@@ -259,11 +262,27 @@ disable_mac80211() (
 
 	return 0
 )
+
 get_freq() {
 	local phy="$1"
 	local chan="$2"
 	iw "$phy" info | grep -E -m1 "(\* ${chan:-....} MHz${chan:+|\\[$chan\\]})" | grep MHz | awk '{print $2}'
 }
+
+mac80211_generate_mac() {
+	local off="$1"
+	local mac="$2"
+	local oIFS="$IFS"; IFS=":"; set -- $mac; IFS="$oIFS"
+
+	local b2mask=0x00
+	[ $off -gt 0 ] && b2mask=0x02
+
+	printf "%02x:%s:%s:%s:%02x:%02x" \
+		$(( 0x$1 | $b2mask )) $2 $3 $4 \
+		$(( (0x$5 + ($off / 0x100)) % 0x100 )) \
+		$(( (0x$6 + $off) % 0x100 ))
+}
+
 enable_mac80211() {
 	local device="$1"
 	config_get channel "$device" channel
@@ -282,6 +301,13 @@ enable_mac80211() {
 	local apidx=0
 	fixed=""
 	local hostapd_ctrl=""
+
+	[ -n "$country" ] && {
+		iw reg get | grep -q "^country $country:" || {
+			iw reg set "$country"
+			sleep 1
+		}
+	}
 
 	config_get ath9k_chanbw "$device" ath9k_chanbw
 	[ -n "$ath9k_chanbw" -a -d /sys/kernel/debug/ieee80211/$phy/ath9k ] && echo "$ath9k_chanbw" > /sys/kernel/debug/ieee80211/$phy/ath9k/chanbw
@@ -303,13 +329,9 @@ enable_mac80211() {
 
 	wifi_fixup_hwmode "$device" "g"
 	for vif in $vifs; do
-		while [ -d "/sys/class/net/wlan$i" ]; do
-			i=$(($i + 1))
-		done
-
 		config_get ifname "$vif" ifname
 		[ -n "$ifname" ] || {
-			ifname="wlan$i"
+			[ $i -gt 0 ] && ifname="wlan${phy#phy}-$i" || ifname="wlan${phy#phy}"
 		}
 		config_set "$vif" ifname "$ifname"
 
@@ -325,7 +347,6 @@ enable_mac80211() {
 				# Hostapd will handle recreating the interface and
 				# it's accompanying monitor
 				apidx="$(($apidx + 1))"
-				i=$(($i + 1))
 				[ "$apidx" -gt 1 ] || iw phy "$phy" interface add "$ifname" type managed
 			;;
 			mesh)
@@ -342,7 +363,7 @@ enable_mac80211() {
 				iw phy "$phy" interface add "$ifname" type managed $wdsflag
 				config_get_bool powersave "$vif" powersave 0
 				[ "$powersave" -gt 0 ] && powersave="on" || powersave="off"
-				iwconfig "$ifname" power "$powersave"
+				iw "$ifname" set power_save "$powersave"
 			;;
 		esac
 
@@ -350,17 +371,9 @@ enable_mac80211() {
 		# which can either be explicitly set in the device
 		# section, or automatically generated
 		config_get macaddr "$device" macaddr
-		local mac_1="${macaddr%%:*}"
-		local mac_2="${macaddr#*:}"
-
 		config_get vif_mac "$vif" macaddr
 		[ -n "$vif_mac" ] || {
-			if [ "$macidx" -gt 0 ]; then
-				offset="$(( 2 + $macidx * 4 ))"
-			else
-				offset="0"
-			fi
-			vif_mac="$( printf %02x $((0x$mac_1 + $offset)) ):$mac_2"
+			vif_mac="$(mac80211_generate_mac $macidx $macaddr)"
 			macidx="$(($macidx + 1))"
 		}
 		[ "$mode" = "ap" ] || ifconfig "$ifname" hw ether "$vif_mac"
@@ -381,11 +394,7 @@ enable_mac80211() {
 			[ -n "$fixed" -a -n "$channel" ] && iw dev "$ifname" set channel "$channel"
 		fi
 
-		config_get vif_txpower "$vif" txpower
-		# use vif_txpower (from wifi-iface) to override txpower (from
-		# wifi-device) if the latter doesn't exist
-		txpower="${txpower:-$vif_txpower}"
-		[ -z "$txpower" ] || iw dev "$ifname" set txpower fixed "${txpower%%.*}00"
+		i=$(($i + 1))
 	done
 
 	local start_hostapd=
@@ -416,85 +425,87 @@ enable_mac80211() {
 	for vif in $vifs; do
 		config_get mode "$vif" mode
 		config_get ifname "$vif" ifname
-		[ ! "$mode" = "ap" ] || continue
-		ifconfig "$ifname" up
+		[ "$mode" = "ap" ] || ifconfig "$ifname" up
 
-		if [ ! "$mode" = "ap" ]; then
-			ifconfig "$ifname" up
-			case "$mode" in
-				adhoc)
-					config_get bssid "$vif" bssid
-					config_get ssid "$vif" ssid
-					config_get beacon_int "$device" beacon_int
-					config_get basic_rate_list "$device" basic_rate
-					config_get encryption "$vif" encryption
-					config_get key "$vif" key 1
-					config_get mcast_rate "$vif" mcast_rate
+		config_get vif_txpower "$vif" txpower
+		# use vif_txpower (from wifi-iface) to override txpower (from
+		# wifi-device) if the latter doesn't exist
+		txpower="${txpower:-$vif_txpower}"
+		[ -z "$txpower" ] || iw dev "$ifname" set txpower fixed "${txpower%%.*}00"
 
-					local keyspec=""
-					[ "$encryption" == "wep" ] && {
-						case "$key" in
-							[1234])
-								local idx
-								for idx in 1 2 3 4; do
-									local ikey
-									config_get ikey "$vif" "key$idx"
+		case "$mode" in
+			adhoc)
+				config_get bssid "$vif" bssid
+				config_get ssid "$vif" ssid
+				config_get beacon_int "$device" beacon_int
+				config_get basic_rate_list "$device" basic_rate
+				config_get encryption "$vif" encryption
+				config_get key "$vif" key 1
+				config_get mcast_rate "$vif" mcast_rate
 
-									[ -n "$ikey" ] && {
-										ikey="$(($idx - 1)):$(prepare_key_wep "$ikey")"
-										[ $idx -eq $key ] && ikey="d:$ikey"
-										append keyspec "$ikey"
-									}
-								done
-							;;
-							*) append keyspec "d:0:$(prepare_key_wep "$key")" ;;
-						esac
-					}
+				local keyspec=""
+				[ "$encryption" == "wep" ] && {
+					case "$key" in
+						[1234])
+							local idx
+							for idx in 1 2 3 4; do
+								local ikey
+								config_get ikey "$vif" "key$idx"
 
-					local br brval brsub brstr
-					[ -n "$basic_rate_list" ] && {
-						for br in $basic_rate_list; do
-							brval="$(($br / 1000))"
-							brsub="$((($br / 100) % 10))"
-							[ "$brsub" -gt 0 ] && brval="$brval.$brsub"
-							[ -n "$brstr" ] && brstr="$brstr,"
-							brstr="$brstr$brval"
-						done
-					}
-
-					local mcval=""
-					[ -n "$mcast_rate" ] && {
-						mcval="$(($mcast_rate / 1000))"
-						mcsub="$(( ($mcast_rate / 100) % 10 ))"
-						[ "$mcsub" -gt 0 ] && mcval="$mcval.$mcsub"
-					}
-
-					config_get htmode "$device" htmode
-					case "$htmode" in
-						HT20|HT40+|HT40-) ;;
-						*) htmode= ;;
+								[ -n "$ikey" ] && {
+									ikey="$(($idx - 1)):$(prepare_key_wep "$ikey")"
+									[ $idx -eq $key ] && ikey="d:$ikey"
+									append keyspec "$ikey"
+								}
+							done
+						;;
+						*) append keyspec "d:0:$(prepare_key_wep "$key")" ;;
 					esac
+				}
 
-					iw dev "$ifname" ibss join "$ssid" $freq $htmode \
-						${fixed:+fixed-freq} $bssid \
-						${beacon_int:+beacon-interval $beacon_int} \
-						${brstr:+basic-rates $brstr} \
-						${mcval:+mcast-rate $mcval} \
-						${keyspec:+keys $keyspec}
-				;;
-				sta)
-					if eval "type wpa_supplicant_setup_vif" 2>/dev/null >/dev/null; then
-						wpa_supplicant_setup_vif "$vif" nl80211 "${hostapd_ctrl:+-H $hostapd_ctrl}" || {
-							echo "enable_mac80211($device): Failed to set up wpa_supplicant for interface $ifname" >&2
-							# make sure this wifi interface won't accidentally stay open without encryption
-							ifconfig "$ifname" down
-							continue
-						}
-					fi
-				;;
-			esac
-			mac80211_start_vif "$vif" "$ifname"
-		fi
+				local br brval brsub brstr
+				[ -n "$basic_rate_list" ] && {
+					for br in $basic_rate_list; do
+						brval="$(($br / 1000))"
+						brsub="$((($br / 100) % 10))"
+						[ "$brsub" -gt 0 ] && brval="$brval.$brsub"
+						[ -n "$brstr" ] && brstr="$brstr,"
+						brstr="$brstr$brval"
+					done
+				}
+
+				local mcval=""
+				[ -n "$mcast_rate" ] && {
+					mcval="$(($mcast_rate / 1000))"
+					mcsub="$(( ($mcast_rate / 100) % 10 ))"
+					[ "$mcsub" -gt 0 ] && mcval="$mcval.$mcsub"
+				}
+
+				config_get htmode "$device" htmode
+				case "$htmode" in
+					HT20|HT40+|HT40-) ;;
+					*) htmode= ;;
+				esac
+
+				iw dev "$ifname" ibss join "$ssid" $freq $htmode \
+					${fixed:+fixed-freq} $bssid \
+					${beacon_int:+beacon-interval $beacon_int} \
+					${brstr:+basic-rates $brstr} \
+					${mcval:+mcast-rate $mcval} \
+					${keyspec:+keys $keyspec}
+			;;
+			sta)
+				if eval "type wpa_supplicant_setup_vif" 2>/dev/null >/dev/null; then
+					wpa_supplicant_setup_vif "$vif" nl80211 "${hostapd_ctrl:+-H $hostapd_ctrl}" || {
+						echo "enable_mac80211($device): Failed to set up wpa_supplicant for interface $ifname" >&2
+						# make sure this wifi interface won't accidentally stay open without encryption
+						ifconfig "$ifname" down
+						continue
+					}
+				fi
+			;;
+		esac
+		[ "$mode" = "ap" ] || mac80211_start_vif "$vif" "$ifname"
 	done
 
 }

@@ -10,7 +10,7 @@ BLOCK_MENU:=Block Devices
 define KernelPackage/ata-core
   SUBMENU:=$(BLOCK_MENU)
   TITLE:=Serial and Parallel ATA support
-  DEPENDS:=@PCI_SUPPORT @LINUX_2_6 +kmod-scsi-core @(!TARGET_ubicom32||!TARGET_etrax||!TARGET_x86)
+  DEPENDS:=@PCI_SUPPORT @LINUX_2_6 +kmod-scsi-core @(!TARGET_ubicom32||!TARGET_x86)
   KCONFIG:=CONFIG_ATA
   FILES:=$(LINUX_DIR)/drivers/ata/libata.$(LINUX_KMOD_SUFFIX)
   AUTOLOAD:=$(call AutoLoad,21,libata,1)
@@ -82,21 +82,6 @@ define KernelPackage/ata-artop/description
 endef
 
 $(eval $(call KernelPackage,ata-artop))
-
-define KernelPackage/ata-octeon-cf
-$(call KernelPackage/ata/Depends,@TARGET_octeon)
-  TITLE:=Octeon Compact Flash support
-  KCONFIG:=CONFIG_PATA_OCTEON_CF
-  FILES:=$(LINUX_DIR)/drivers/ata/pata_octeon_cf.$(LINUX_KMOD_SUFFIX)
-  AUTOLOAD:=$(call AutoLoad,41,pata_octeon_cf,1)
-endef
-
-define KernelPackage/ata-octeon-cf/description
-  Octeon Compact Flash support.
-endef
-
-$(eval $(call KernelPackage,ata-octeon-cf))
-
 
 define KernelPackage/ata-ixp4xx-cf
 $(call KernelPackage/ata/Depends,@TARGET_ixp4xx)
@@ -448,36 +433,6 @@ define KernelPackage/aoe/description
 endef
 
 $(eval $(call KernelPackage,aoe))
-
-define KernelPackage/ps3vram
-  SUBMENU:=$(BLOCK_MENU)
-  TITLE:=PS3 Video RAM Storage Driver
-  DEPENDS:=@TARGET_ps3||TARGET_ps3chk
-  KCONFIG:=CONFIG_PS3_VRAM
-  FILES:=$(LINUX_DIR)/drivers/block/ps3vram.$(LINUX_KMOD_SUFFIX)
-  AUTOLOAD:=$(call AutoLoad,01,ps3vram)
-endef
-
-define KernelPackage/ps3vram/description
-  Kernel support for PS3 Video RAM Storage
-endef
-
-$(eval $(call KernelPackage,ps3vram))
-
-define KernelPackage/axonram
-  SUBMENU:=$(BLOCK_MENU)
-  TITLE:=Axon DDR2 memory device driver
-  DEPENDS:=@TARGET_pxcab
-  KCONFIG:=CONFIG_AXON_RAM
-  FILES:=$(LINUX_DIR)/arch/powerpc/sysdev/axonram.$(LINUX_KMOD_SUFFIX)
-  AUTOLOAD:=$(call AutoLoad,01,axonram)
-endef
-
-define KernelPackage/axonram/description
-  Kernel support for Axon DDR2 memory device
-endef
-
-$(eval $(call KernelPackage,axonram))
 
 define KernelPackage/libsas
   SUBMENU:=$(BLOCK_MENU)

@@ -1,5 +1,5 @@
 # 
-# Copyright (C) 2006-2009 OpenWrt.org
+# Copyright (C) 2006-2011 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=busybox
 PKG_VERSION:=1.15.3
-PKG_RELEASE:=2
+PKG_RELEASE:=3.4
 PKG_FLAGS:=essential
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
@@ -55,10 +55,6 @@ define Build/Configure
 		ARCH="$(ARCH)" \
 		oldconfig
 endef
-
-ifdef CONFIG_GCC_VERSION_LLVM
-  TARGET_CFLAGS += -fnested-functions
-endif
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \

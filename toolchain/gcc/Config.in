@@ -5,17 +5,13 @@ choice
 	default GCC_VERSION_3_4_6 if LINUX_2_4
 	default GCC_VERSION_4_2_4 if avr32
 	default GCC_VERSION_4_3_3 if powerpc64
-	default GCC_VERSION_4_3_3 if TARGET_etrax
-	default GCC_VERSION_4_3_3 if TARGET_coldfire
-	default GCC_VERSION_4_3_4 if TARGET_gemini
 	default GCC_VERSION_4_4_1 if ubicom32
-	default GCC_VERSION_4_3_3_CS if (mips || mipsel) && !(TARGET_octeon || TARGET_sibyte)
-	default GCC_VERSION_4_3_3_CS if (arm || armeb) && !TARGET_gemini
+	default GCC_VERSION_4_3_3_CS if (mips || mipsel)
+	default GCC_VERSION_4_3_3_CS if (arm || armeb)
 	default GCC_VERSION_4_4_3 if powerpc
-	default GCC_VERSION_4_4_3 if (TARGET_octeon || TARGET_sibyte)
 	default GCC_VERSION_4_1_2
 	help
-	  Select the version of gcc you wish to use.
+	    Select the version of gcc you wish to use.
 
 	config GCC_VERSION_3_4_6
 		bool "gcc 3.4.6"
@@ -30,6 +26,9 @@ if !LINUX_2_4
 	config GCC_VERSION_4_3_3
 		bool "gcc 4.3.3"
 
+	config GCC_VERSION_4_3_3_CS
+		bool "gcc 4.3.3 with CodeSourcery enhancements"
+
 	config GCC_VERSION_4_3_4
 		bool "gcc 4.3.4"
 
@@ -41,21 +40,6 @@ if !LINUX_2_4
 
 	config GCC_VERSION_4_4_3
 		bool "gcc 4.4.3"
-
-	config GCC_VERSION_LLVM
-		bool "llvm-gcc 4.2"
-		depends BROKEN
-
-	config GCC_VERSION_4_3_3_CS
-		bool "gcc 4.3.3 with CodeSourcery enhancements"
-
-	config GCC_VERSION_4_4_1_CS
-		bool "gcc 4.4.1 with CodeSourcery enhancements"
-		depends BROKEN
-
-	config GCC_VERSION_4_4_3_CS
-		bool "gcc 4.4.3 with CodeSourcery enhancements"
-		depends BROKEN
 
 endif
 
@@ -83,7 +67,7 @@ config SSP_SUPPORT
 
 config TLS_SUPPORT
 	bool
-	depends !GCC_VERSION_3_4_6 && UCLIBC_VERSION_NPTL
+	depends !GCC_VERSION_3_4_6
 	prompt "Enable Thread-local storage (TLS) support" if TOOLCHAINOPTS
 	default n
 	help

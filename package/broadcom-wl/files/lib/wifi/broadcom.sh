@@ -3,12 +3,15 @@ append DRIVERS "broadcom"
 scan_broadcom() {
 	local device="$1"
 	local wds
-	local adhoc sta apmode mon
+	local adhoc sta apmode mon disabled
 	local adhoc_if sta_if ap_if mon_if
 	local _c=0
 
 	config_get vifs "$device" vifs
 	for vif in $vifs; do
+		config_get_bool disabled "$vif" disabled 0
+		[ $disabled -eq 0 ] || continue
+
 		config_get mode "$vif" mode
 		_c=$(($_c + 1))
 		case "$mode" in
@@ -226,22 +229,33 @@ enable_broadcom() {
 					*aes|*AES) auth=4; wsec=4;;
 					*) auth=4; wsec=2;;
 				esac
+				# group rekey interval
+				config_get rekey "$vif" wpa_group_rekey
+
 				eval "${vif}_key=\"\$key\""
-				nasopts="-k \"\$${vif}_key\""
+				nasopts="-k \"\$${vif}_key\"${rekey:+ -g $rekey}"
 			;;
 			*wpa*|*WPA*)
 				wsec_r=1
 				eap_r=1
-				config_get key "$vif" key
-				config_get server "$vif" server
-				config_get port "$vif" port
+				config_get auth_server "$vif" auth_server
+				[ -z "$auth_server" ] && config_get auth_server "$vif" server
+				config_get auth_port "$vif" auth_port
+				[ -z "$auth_port" ] && config_get auth_port "$vif" port
+				config_get auth_secret "$vif" auth_secret
+				[ -z "$auth_secret" ] && config_get auth_secret "$vif" key
+
+				# wpa version + default cipher
 				case "$enc" in
 					wpa*+wpa2*|WPA*+WPA2*) auth=66; wsec=6;;
 					wpa2*|WPA2*) auth=64; wsec=4;;
 					*) auth=2; wsec=2;;
 				esac
-				eval "${vif}_key=\"\$key\""
-				nasopts="-r \"\$${vif}_key\" -h $server -p ${port:-1812}"
+				# group rekey interval
+				config_get rekey "$vif" wpa_group_rekey
+
+				eval "${vif}_key=\"\$auth_secret\""
+				nasopts="-r \"\$${vif}_key\" -h $auth_server -p ${auth_port:-1812}${rekey:+ -g $rekey}"
 			;;
 		esac
 		append vif_do_up "wsec $wsec" "$N"

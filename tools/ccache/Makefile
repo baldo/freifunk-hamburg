@@ -13,6 +13,7 @@ PKG_VERSION:=3.1.7
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://samba.org/ftp/ccache/
 PKG_MD5SUM:=80a698c22d0b06b19c88ac58e8d8b632
+PKG_CAT:=xzcat
 
 include $(INCLUDE_DIR)/host-build.mk
 

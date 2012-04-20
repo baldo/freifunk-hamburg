@@ -23,8 +23,12 @@ define Host/Install/ccache
 endef
 
 ifneq ($(strip $(shell which ccache >/dev/null && echo found)),found)
+  define Host/Configure
+	$(call Host/Configure/Default,CC="$(HOSTCC_NOCACHE)")
+  endef
+
   define Host/Compile
-	$(MAKE) CC="$(HOSTCC_NOCACHE)" -C $(HOST_BUILD_DIR)
+	$(MAKE) -C $(HOST_BUILD_DIR)
   endef
 
   define Host/Clean

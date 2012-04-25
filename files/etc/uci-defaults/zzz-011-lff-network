@@ -5,6 +5,10 @@ local lan_ifname="$(uci get network.lan.ifname)"
 uci batch <<EOF
 delete network.lan
 
+set network.wan.type='bridge'
+set network.wan.proto='dhcp'
+set network.wan.auto='1'
+
 set network.freifunk='interface'
 set network.freifunk.ifname='$lan_ifname bat0'
 set network.freifunk.type='bridge'

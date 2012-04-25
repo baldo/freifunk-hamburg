@@ -10,13 +10,13 @@ set wireless.wifi_freifunk='wifi-iface'
 set wireless.wifi_freifunk.device='radio0'
 set wireless.wifi_freifunk.network='freifunk'
 set wireless.wifi_freifunk.mode='ap'
-set wireless.wifi_freifunk.ssid='http://luebeck.freifunk.net/'
+set wireless.wifi_freifunk.ssid='Experimental'
 
 set wireless.wifi_mesh='wifi-iface'
 set wireless.wifi_mesh.device='radio0'
 set wireless.wifi_mesh.network='mesh'
 set wireless.wifi_mesh.mode='adhoc'
-set wireless.wifi_mesh.ssid='mesh.freifunk.net'
+set wireless.wifi_mesh.ssid='02:d1:11:37:fc:38'
 set wireless.wifi_mesh.bssid='02:d1:11:37:fc:38'
 
 commit wireless

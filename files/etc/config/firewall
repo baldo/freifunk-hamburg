@@ -40,7 +40,9 @@ config rule
 	list icmp_type		bad-header
 	list icmp_type		unknown-header-type
 	list icmp_type		router-solicitation
+	list icmp_type		router-advertisement
 	list icmp_type		neighbour-solicitation
+	list icmp_type		neighbour-advertisement
 	option limit		1000/sec
 	option family		ipv6
 	option target		ACCEPT

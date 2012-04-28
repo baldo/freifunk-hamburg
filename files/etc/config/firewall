@@ -19,6 +19,13 @@ config zone
 	option forward		REJECT
 
 config rule
+        option name             Allow-DHCP-Renew
+        option proto            udp
+        option dest_port        68
+        option target           ACCEPT
+        option family           ipv4
+
+config rule
 	option name		Allow-ICMP-Input
 	option proto		icmp
 	list icmp_type		echo-request

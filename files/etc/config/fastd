@@ -1,0 +1,15 @@
+package fastd
+
+config fastd ffhl_mesh_vpn
+	option enabled 0
+	
+	list config '/etc/fastd/ffhl-mesh-vpn/up.conf'
+	list config_peer_dir '/etc/fastd/ffhl-mesh-vpn/peers'
+
+	option log_level 'verbose'
+
+	option method 'xsalsa20-poly1305'
+	option mode 'tap'
+	
+	option interface 'ffhl-mesh-vpn'
+	option mtu 1426

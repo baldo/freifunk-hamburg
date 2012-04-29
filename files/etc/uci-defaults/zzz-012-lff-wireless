@@ -1,6 +1,6 @@
 #!/bin/sh
 
-uci batch <<EOF
+uci -q batch <<EOF
 delete wireless.radio0.disabled
 delete wireless.@wifi-iface[0]
 

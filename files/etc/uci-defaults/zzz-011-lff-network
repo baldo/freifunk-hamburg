@@ -2,7 +2,7 @@
 
 local lan_ifname="$(uci get network.lan.ifname)"
 
-uci batch <<EOF
+uci -q batch <<EOF
 delete network.lan
 
 set network.wan.type='bridge'

@@ -2,8 +2,13 @@
 
 local macaddr="$(uci get wireless.radio0.macaddr)"
 
-uci batch <<EOF
+uci -q batch <<EOF
 set system.@system[0].hostname='Freifunk-${macaddr//:/}'
+set system.@system[0].timezone='CET-1CEST,M3.5.0,M10.5.0/3'
+
+set system.led_wlan.trigger='netdev'
+set system.led_wlan.dev='wlan0'
+set system.led_wlan.mode='link'
 
 commit system
 EOF

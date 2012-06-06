@@ -10,6 +10,7 @@ config fastd ffhl_mesh_vpn
 
 	option method 'xsalsa20-poly1305'
 	option mode 'tap'
+	option bind '0.0.0.0'
 	
 	option interface 'ffhl-mesh-vpn'
 	option mtu 1426

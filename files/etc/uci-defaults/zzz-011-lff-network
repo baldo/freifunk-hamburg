@@ -14,7 +14,7 @@ set network.freifunk='interface'
 set network.freifunk.ifname='$lan_ifname bat0'
 set network.freifunk.type='bridge'
 set network.freifunk.proto='dhcp'
-set network.freifunk.gateway='0.0.0.0'
+set network.freifunk.defaultroute='0'
 
 set network.mesh='interface'
 set network.mesh.proto='none'

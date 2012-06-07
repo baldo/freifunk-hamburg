@@ -14,45 +14,16 @@ config zone
 config zone
 	option name		freifunk
 	option network		'freifunk'
-	option input		REJECT
+	option input		ACCEPT
 	option output		ACCEPT
 	option forward		REJECT
 
 config rule
-        option name             Allow-DHCP-Renew
-        option proto            udp
-        option dest_port        68
-        option target           ACCEPT
-        option family           ipv4
-
-config rule
-	option name		Allow-ICMP-Input
-	option proto		icmp
-	list icmp_type		echo-request
-	list icmp_type		echo-reply
-	list icmp_type		destination-unreachable
-	list icmp_type		time-exceeded
-	option limit		1000/sec
-	option family		ipv4
-	option target		ACCEPT
-
-config rule
-	option name		Allow-ICMPv6-Input
-	option proto		icmp
-	list icmp_type		echo-request
-	list icmp_type		echo-reply
-	list icmp_type		destination-unreachable
-	list icmp_type		packet-too-big
-	list icmp_type		time-exceeded
-	list icmp_type		bad-header
-	list icmp_type		unknown-header-type
-	list icmp_type		router-solicitation
-	list icmp_type		router-advertisement
-	list icmp_type		neighbour-solicitation
-	list icmp_type		neighbour-advertisement
-	option limit		1000/sec
-	option family		ipv6
-	option target		ACCEPT
+	option name             Reject-Telnet
+	option src		freifunk
+	option proto            tcp
+	option dest_port        23
+	option target           REJECT
 
 # include a file with users custom iptables rules
 config include

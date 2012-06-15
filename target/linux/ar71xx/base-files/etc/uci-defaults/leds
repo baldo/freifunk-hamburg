@@ -97,6 +97,7 @@ tl-wr741nd)
 	ucidef_set_led_switch "lan2" "LAN2" "tp-link:green:lan2" "switch0" "0x04"
 	ucidef_set_led_switch "lan3" "LAN3" "tp-link:green:lan3" "switch0" "0x08"
 	ucidef_set_led_switch "lan4" "LAN4" "tp-link:green:lan4" "switch0" "0x10"
+	ucidef_set_led_wlan "wlan" "WLAN" "ath9k-phy0" "phy0tpt"
 	;;
 
 tl-wr741nd-v4)

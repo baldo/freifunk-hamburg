@@ -7,7 +7,6 @@ delete wireless.@wifi-iface[0]
 set wireless.radio0.channel='1'
 set wireless.radio0.htmode='HT40+'
 set wireless.radio0.country='DE'
-set wireless.radio0.rts='250'
 
 set wireless.wifi_freifunk='wifi-iface'
 set wireless.wifi_freifunk.device='radio0'

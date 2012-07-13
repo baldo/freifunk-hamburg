@@ -1,0 +1,32 @@
+#!/bin/sh
+
+
+VERSION_FILE=/etc/lff_version
+KEEP_VERSION_FILE=/etc/.lff_version_keep
+UPGRADE_DIR=/lib/upgrade/lff
+
+
+version="$(cat "$VERSION_FILE")"
+oldversion="$(cat "$KEEP_VERSION_FILE" 2>/dev/null)"      
+  
+if [ -z "$oldversion" ]; then oldversion=0; fi
+
+
+newer_than() {
+	old="$(echo "$1\n$2" | sort -n | head -n 1)"
+	test "$1" != "$old"
+}
+
+
+(
+	cd "$UPGRADE_DIR"
+
+	for v in *; do
+		if newer_than "$v" "$oldversion"; then
+			for s in "$v"/*; do "$s"; done
+		fi
+	done
+)
+
+
+echo "$version" > "$KEEP_VERSION_FILE"

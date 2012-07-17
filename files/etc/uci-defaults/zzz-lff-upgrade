@@ -13,7 +13,7 @@ if [ -z "$oldversion" ]; then oldversion=0; fi
 
 
 newer_than() {
-	old="$(echo "$1\n$2" | sort -n | head -n 1)"
+	old="$(printf '%s\n%s\n' "$1" "$2" | sort -n | head -n 1)"
 	test "$1" != "$old"
 }
 

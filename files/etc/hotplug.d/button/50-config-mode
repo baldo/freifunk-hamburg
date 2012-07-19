@@ -1,0 +1,11 @@
+#!/bin/sh
+
+
+min_seen=3
+
+
+if [ "$BUTTON" = wps -a "$ACTION" = released -a "$SEEN" -ge $min_seen ]; then
+	uci set 'ffhl.@wizard[0].enabled=1'
+	uci commit ffhl
+	reboot
+fi

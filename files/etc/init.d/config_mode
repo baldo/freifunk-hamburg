@@ -1,0 +1,39 @@
+#!/bin/sh /etc/rc.common
+
+START=12
+
+
+config_mode_iface=eth0
+config_mode_addr=192.168.1.1/24
+
+
+check_enabled() {
+	config_get enabled "$1" enabled
+
+	if [ "$enabled" ]; then
+		export enabled
+	fi
+}
+
+start() {
+	enabled=0
+	config_load ffhl
+	config_foreach check_enabled wizard
+
+	if [ "$enabled" = '1' ]; then
+		ip addr add $config_mode_addr dev $config_mode_iface
+		ip link set up dev $config_mode_iface
+
+		/etc/init.d/telnet start
+		/etc/init.d/dropbear start
+		/etc/init.d/uhttpd start
+		/etc/init.d/led start
+
+		. /etc/diag.sh
+		get_status_led
+		status_led_set_timer 1000 300
+
+		# block further boot
+		while true; do sleep 1; done
+	fi
+}

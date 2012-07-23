@@ -1,11 +1,29 @@
 #!/bin/sh
 
 
-min_seen=3
+wait=3
 
 
-if [ "$BUTTON" = wps -a "$ACTION" = released -a "$SEEN" -ge $min_seen ]; then
+wait_config_mode() {
+	sleep $wait
 	uci set 'ffhl.@wizard[0].enabled=1'
 	uci commit ffhl
 	reboot
+}
+
+
+if [ "$BUTTON" = wps ]; then
+	case "$ACTION" in
+		pressed)
+			wait_config_mode &
+			PID=$!
+			echo $PID > /tmp/.wait_config_mode
+			;;
+		released)
+			if [ -r /tmp/.wait_config_mode ]; then
+				kill $(cat /tmp/.wait_config_mode)
+				rm /tmp/.wait_config_mode
+			fi
+			;;
+	esac
 fi

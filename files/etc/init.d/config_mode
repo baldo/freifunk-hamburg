@@ -32,6 +32,9 @@ start() {
 		/etc/init.d/uhttpd start
 		/etc/init.d/led start
 
+		# correctly finish firstboot
+		/etc/init.d/done boot
+
 		echo "$config_mode_addr $config_mode_dnsname" > /tmp/hosts.config_mode
 		dnsmasq -h -H /tmp/hosts.config_mode -R -F interface:$config_mode_iface,$config_mode_dhcp_range -l /tmp/dhcp.leases -O option:router
 

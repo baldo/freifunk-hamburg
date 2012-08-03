@@ -1,6 +1,6 @@
 #!/bin/sh
 
-local macaddr="$(uci get wireless.radio0.macaddr)"
+macaddr="$(uci get wireless.radio0.macaddr)"
 
 uci -q batch <<EOF
 set system.@system[0].hostname='Freifunk-${macaddr//:/}'

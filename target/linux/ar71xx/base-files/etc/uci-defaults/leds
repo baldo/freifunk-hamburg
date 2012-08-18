@@ -109,6 +109,10 @@ tl-wr741nd-v4)
 	ucidef_set_led_wlan "wlan" "WLAN" "tp-link:green:wlan" "phy0tpt"
 	;;
 
+tl-wr841n-v7)
+	ucidef_set_led_wlan "wlan" "WLAN" "ath9k-phy0" "phy0tpt"
+	;;
+
 tl-wr941nd | \
 tl-wr1041n-v2)
 	ucidef_set_led_wlan "wlan" "WLAN" "tp-link:green:wlan" "phy0tpt"

@@ -4,16 +4,11 @@
 
 board="$(ar71xx_board_name)"
 
-macaddr="$(uci get wireless.radio0.macaddr)"
-
-uci -q batch <<EOF
-	set system.@system[0].hostname='Freifunk-${macaddr//:/}'
-	set system.@system[0].timezone='CET-1CEST,M3.5.0,M10.5.0/3'
-EOF
-
 case "$board" in
 tl-wdr3600|\
 tl-wdr4300)
+	macaddr="$(uci get wireless.radio1.macaddr)"
+
 	uci -q batch <<EOF
 		set system.led_wlan2g.trigger='netdev'
 		set system.led_wlan2g.dev='wlan0'
@@ -28,6 +23,8 @@ tl-wdr4300)
 EOF
 	;;
 *)
+	macaddr="$(uci get wireless.radio0.macaddr)"
+
 	uci -q batch <<EOF
 		set system.led_wlan.trigger='netdev'
 		set system.led_wlan.dev='wlan0'
@@ -36,4 +33,8 @@ EOF
 	;;
 esac
 
-uci commit system
+uci -q batch <<EOF
+	set system.@system[0].hostname='Freifunk-${macaddr//:/}'
+	set system.@system[0].timezone='CET-1CEST,M3.5.0,M10.5.0/3'
+	commit system
+EOF

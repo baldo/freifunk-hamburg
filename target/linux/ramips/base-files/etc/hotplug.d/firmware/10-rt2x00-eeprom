@@ -38,6 +38,10 @@ case "$FIRMWARE" in
 		rt2x00_eeprom_extract "devdata" 16384 272
 		;;
 
+	dap-1350)
+		rt2x00_eeprom_extract "devdata" 0 272
+		;;
+
 	rt-n10-plus | \
 	rt-g32-b1)
 		rt2x00_eeprom_extract "devconf" 0 272
@@ -49,9 +53,14 @@ case "$FIRMWARE" in
 		;;
 
 	3g-6200n | \
+	all0239-3g | \
 	all0256n | \
+	all5002 | \
 	argus-atp52b | \
 	bc2 | \
+	carambola | \
+	dir-615-h1 | \
+	dir-620-a1 | \
 	esr-9753 | \
 	fonera20n | \
 	freestation5 | \

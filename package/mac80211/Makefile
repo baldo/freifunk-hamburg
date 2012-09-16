@@ -10,10 +10,10 @@ include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=mac80211
 
-PKG_VERSION:=2012-07-06
-PKG_RELEASE:=1
+PKG_VERSION:=2012-09-07
+PKG_RELEASE:=2
 PKG_SOURCE_URL:=http://mirror2.openwrt.org/sources
-PKG_MD5SUM:=71e1ba84a7d1c3ab69ee1b68fa9e1269
+PKG_MD5SUM:=59e0a114ee4b755a6e47cb6cd0f32ebc
 
 PKG_SOURCE:=compat-wireless-$(PKG_VERSION).tar.bz2
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/compat-wireless-$(PKG_VERSION)
@@ -1083,6 +1083,7 @@ define KernelPackage/brcmutil
   $(call KernelPackage/mac80211/Default)
   TITLE:=Broadcom IEEE802.11n common driver parts
   URL:=http://linuxwireless.org/en/users/Drivers/brcm80211
+  DEPENDS+=@PCI_SUPPORT||USB_SUPPORT
   FILES:=$(PKG_BUILD_DIR)/drivers/net/wireless/brcm80211/brcmutil/brcmutil.ko
   AUTOLOAD:=$(call AutoLoad,30,brcmutil)
   MENU:=1
@@ -1328,7 +1329,10 @@ define Build/Prepare
 	$(TAR) -C $(PKG_BUILD_DIR) -xjf $(DL_DIR)/$(PKG_LINUX_FIRMWARE_SOURCE)
 	rm -rf $(PKG_BUILD_DIR)/include/linux/ssb
 	rm -rf $(PKG_BUILD_DIR)/include/linux/bcma
+	rm -rf $(PKG_BUILD_DIR)/include/net/bluetooth/
 	rm -f $(PKG_BUILD_DIR)/include/linux/eeprom_93cx6.h
+	rm -f $(PKG_BUILD_DIR)/include/linux/wl12xx.h
+	rm -f $(PKG_BUILD_DIR)/include/linux/spi/libertas_spi.h
 	rm -f $(PKG_BUILD_DIR)/include/net/ieee80211.h
 	echo 'compat-wireless-$(PKG_VERSION)-$(PKG_RELEASE)-$(REVISION)' > $(PKG_BUILD_DIR)/compat_version
 	$(CP) ./files/regdb.txt $(PKG_BUILD_DIR)/net/wireless/db.txt
@@ -1340,6 +1344,12 @@ ifneq ($(CONFIG_PACKAGE_kmod-cfg80211)$(CONFIG_PACKAGE_kmod-lib80211),)
 	$(MAKE) $(PKG_JOBS) -C "$(PKG_BUILD_DIR)" $(MAKE_OPTS) modules
  endef
 endif
+
+define Build/Configure
+	cmp $(PKG_BUILD_DIR)/include/linux/ath9k_platform.h $(LINUX_DIR)/include/linux/ath9k_platform.h
+	cmp $(PKG_BUILD_DIR)/include/linux/ath5k_platform.h $(LINUX_DIR)/include/linux/ath5k_platform.h
+	cmp $(PKG_BUILD_DIR)/include/linux/rt2x00_platform.h $(LINUX_DIR)/include/linux/rt2x00_platform.h
+endef
 
 define Build/Compile
 	$(call Build/Compile/kmod)

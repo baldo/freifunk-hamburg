@@ -14,7 +14,11 @@ PKG_SOURCE_URL:=@GNU/$(PKG_NAME)
 PKG_MD5SUM:=9dba20116b13fc61a0846b0058fbe004
 PKG_CAT:=bzcat
 
+HOST_BUILD_PARALLEL:=1
+
 include $(INCLUDE_DIR)/host-build.mk
+
+HOST_LDFLAGS += $(HOST_STATIC_LINKING)
 
 define Host/Clean
 	-$(MAKE) -C $(HOST_BUILD_DIR) uninstall

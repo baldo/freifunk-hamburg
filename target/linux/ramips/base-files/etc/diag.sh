@@ -36,8 +36,11 @@ get_status_led() {
 	argus-atp52b)
 		status_led="argus-atp52b:green:run"
 		;;
-	dir-300-b1 | dir-600-b1 | dir-600-b2)
+	dir-300-b1 | dir-600-b1 | dir-600-b2 | dir-615-h1 | dir-620-a1)
 		status_led="d-link:green:status"
+		;;
+	dap-1350)
+		status_led="d-link:blue:power"
 		;;
 	esr-9753)
 		status_led="esr-9753:orange:power"
@@ -48,6 +51,7 @@ get_status_led() {
 	fonera20n)
 		status_led="fonera20n:green:power"
 		;;
+	all0239-3g|\
 	hw550-3g)
 		status_led="hw550-3g:green:status"
 		;;

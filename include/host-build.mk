@@ -9,11 +9,17 @@ HOST_BUILD_DIR ?= $(BUILD_DIR_HOST)/$(PKG_NAME)$(if $(PKG_VERSION),-$(PKG_VERSIO
 HOST_INSTALL_DIR ?= $(HOST_BUILD_DIR)/host-install
 HOST_BUILD_PARALLEL ?=
 
+ifneq ($(CONFIG_PKG_BUILD_USE_JOBSERVER),)
+  HOST_MAKE_J:=$(if $(MAKE_JOBSERVER),$(MAKE_JOBSERVER) -j)
+else
+  HOST_MAKE_J:=-j$(CONFIG_PKG_BUILD_JOBS)
+endif
+
 ifeq ($(strip $(HOST_BUILD_PARALLEL)),0)
 HOST_JOBS?=-j1
 else
 HOST_JOBS?=$(if $(HOST_BUILD_PARALLEL)$(CONFIG_PKG_DEFAULT_PARALLEL),\
-	$(if $(CONFIG_PKG_BUILD_PARALLEL),-j$(CONFIG_PKG_BUILD_JOBS),-j1),-j1)
+	$(if $(CONFIG_PKG_BUILD_PARALLEL),$(HOST_MAKE_J),-j1),-j1)
 endif
 
 include $(INCLUDE_DIR)/host.mk
@@ -47,7 +53,7 @@ endef
 HOST_CONFIGURE_VARS = \
 	CC="$(HOSTCC)" \
 	CFLAGS="$(HOST_CFLAGS)" \
-	CPPFLAGS="$(HOST_CFLAGS)" \
+	CPPFLAGS="$(HOST_CPPFLAGS)" \
 	LDFLAGS="$(HOST_LDFLAGS)" \
 	SHELL="$(BASH)"
 
@@ -64,6 +70,12 @@ HOST_CONFIGURE_ARGS = \
 	--sbindir=$(STAGING_DIR_HOST)/bin
 
 HOST_CONFIGURE_CMD = ./configure
+
+ifneq ($(HOST_OS),Darwin)
+  ifeq ($(CONFIG_BUILD_STATIC_TOOLS),y)
+    HOST_STATIC_LINKING = -static
+  endif
+endif
 
 define Host/Configure/Default
 	(cd $(HOST_BUILD_DIR)/$(3); \

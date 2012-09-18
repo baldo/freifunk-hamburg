@@ -2,8 +2,8 @@
 
 . /lib/ar71xx.sh
 
-lan_ifname="$(uci get network.lan.ifname)"
-board="$(ar71xx_board_name)"
+local lan_ifname="$(uci get network.lan.ifname)"
+local board="$(ar71xx_board_name)"
 
 uci -q batch <<EOF
 delete network.lan
@@ -30,25 +30,30 @@ EOF
 
 case "$board" in
 tl-wr1043nd) # fix up duplicate mac addresses
-	oIFS="$IFS"; IFS=":"; set -- $(uci get wireless.radio0.macaddr); IFS="$oIFS"
-	b2mask=0x02
+	local oIFS="$IFS"; IFS=":"; set -- $(uci get wireless.radio0.macaddr); IFS="$oIFS"
+	local b2mask=0x02
 
-	wanaddr=$(printf "%02x:%s:%s:%02x:%s:%02x" $(( 0x$1 | $b2mask )) $2 $3 $(( (0x$4 + 1) % 0x100 )) $5 $(( (0x$6 + 1) % 0x100 )) )
-	ffaddr=$(printf "%02x:%s:%s:%02x:%s:%02x" $(( 0x$1 | $b2mask )) $2 $3 $(( (0x$4 + 1) % 0x100 )) $5 $(( (0x$6 + 2) % 0x100 )) )
+	local wanaddr=$(printf "%02x:%s:%s:%02x:%s:%02x" $(( 0x$1 | $b2mask )) $2 $3 $(( (0x$4 + 1) % 0x100 )) $5 $(( (0x$6 + 1) % 0x100 )) )
+	local ffaddr=$(printf "%02x:%s:%s:%02x:%s:%02x" $(( 0x$1 | $b2mask )) $2 $3 $(( (0x$4 + 1) % 0x100 )) $5 $(( (0x$6 + 2) % 0x100 )) )
 
 	uci set network.wan.macaddr="$wanaddr"
 	uci set network.freifunk.macaddr="$ffaddr"
 	;;
 tl-wdr3600|\
 tl-wdr4300)
-	oIFS="$IFS"; IFS=":"; set -- $(uci get wireless.radio1.macaddr); IFS="$oIFS"
-	b2mask=0x02
+	local oIFS="$IFS"; IFS=":"; set -- $(uci get wireless.radio1.macaddr); IFS="$oIFS"
+	local b2mask=0x02
 
-	wanaddr=$(printf "%02x:%s:%s:%02x:%s:%02x" $(( 0x$1 | $b2mask )) $2 $3 $(( (0x$4 + 1) % 0x100 )) $5 $(( (0x$6 + 1) % 0x100 )) )
-	ffaddr=$(printf "%02x:%s:%s:%02x:%s:%02x" $(( 0x$1 | $b2mask )) $2 $3 $(( (0x$4 + 1) % 0x100 )) $5 $(( (0x$6 + 2) % 0x100 )) )
+	local wanaddr=$(printf "%02x:%s:%s:%02x:%s:%02x" $(( 0x$1 | $b2mask )) $2 $3 $(( (0x$4 + 1) % 0x100 )) $5 $(( (0x$6 + 1) % 0x100 )) )
+	local ffaddr=$(printf "%02x:%s:%s:%02x:%s:%02x" $(( 0x$1 | $b2mask )) $2 $3 $(( (0x$4 + 1) % 0x100 )) $5 $(( (0x$6 + 2) % 0x100 )) )
 
 	uci set network.wan.macaddr="$wanaddr"
 	uci set network.freifunk.macaddr="$ffaddr"
+	;;
+*)
+	local baseif=$(echo $lan_ifname | sed -e 's/\..*//')
+	local ffaddr=$(cat /sys/class/net/$baseif/address)
+	uci set network.freifunk.macaddr=$ffaddr
 	;;
 esac
 

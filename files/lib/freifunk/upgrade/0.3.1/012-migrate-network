@@ -1,0 +1,13 @@
+#!/bin/sh
+
+uci -q get network.freifunk.macaddr >/dev/null && exit 0
+
+local ifname=$(uci -q get network.freifunk.ifname | sed -e 's/ .*//')
+local baseif=$(echo $ifname | sed -e 's/\..*//')
+
+[ "$baseif" ] || exit 1
+
+local ffaddr=$(cat /sys/class/net/$baseif/address)
+
+uci set network.freifunk.macaddr=$ffaddr
+uci commit network

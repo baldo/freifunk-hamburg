@@ -123,6 +123,9 @@ tplink_board_detect() {
 	"342000"*)
 		model="TP-Link TL-MR3420"
 		;;
+	"360000"*)
+		model="TP-Link TL-WDR3600"
+		;;
 	"430000"*)
 		model="TP-Link TL-WDR4300"
 		;;
@@ -155,6 +158,12 @@ ar71xx_board_detect() {
 		;;
 	*ALL0258N)
 		name="all0258n"
+		;;
+	*ALL0305)
+		name="all0305"
+		;;
+	*ALL0315N)
+		name="all0315n"
 		;;
 	*AP113)
 		name="ap113"
@@ -191,6 +200,12 @@ ar71xx_board_detect() {
 		;;
 	*"DIR-825 rev. B1")
 		name="dir-825-b1"
+		;;
+	*"DIR-825 rev. B1 OpenWrt")
+		name="dir-825-b1-openwrt"
+		;;
+	*"DIR-825 rev. B1 TOSTOCK")
+		name="dir-825-b1-tostock"
 		;;
 	*EAP7660D)
 		name="eap7660d"
@@ -234,7 +249,7 @@ ar71xx_board_detect() {
 	*PB42)
 		name="pb42"
 		;;
-	*PB44)
+	*"PB44 reference board")
 		name="pb44"
 		;;
 	*PB92)
@@ -276,6 +291,12 @@ ar71xx_board_detect() {
 	*"RouterBOARD 751G")
 		name="rb-751g"
 		;;
+	*"RouterBOARD 2011L")
+		name="rb-2011l"
+		;;
+	*"RouterBOARD 2011UAS-2HnD")
+		name="rb-2011uas-2hnd"
+		;;
 	*"Rocket M")
 		name="rocket-m"
 		;;
@@ -293,6 +314,9 @@ ar71xx_board_detect() {
 		;;
 	*TEW-673GRU)
 		name="tew-673gru"
+		;;
+	*TEW-712BR)
+		name="tew-712br"
 		;;
 	*"TL-WR1041N v2")
 		name="tl-wr1041n-v2"
@@ -321,7 +345,7 @@ ar71xx_board_detect() {
 	*"TL-WA901ND v2")
 		name="tl-wa901nd-v2"
 		;;
-	*TL-WDR4300)
+	*"TL-WDR3600/4300/4310")
 		name="tl-wdr4300"
 		;;
 	*TL-WR741ND)
@@ -353,6 +377,9 @@ ar71xx_board_detect() {
 		;;
 	*WHR-HP-GN)
 		name="whr-hp-gn"
+		;;
+	*WLAE-AG300N)
+		name="wlae-ag300n"
 		;;
 	*WP543)
 		name="wp543"
@@ -395,6 +422,9 @@ ar71xx_board_detect() {
 		;;
 	*EmbWir-Dorin)
 		name="ew-dorin"
+		;;
+	*EmbWir-Dorin-Router)
+		name="ew-dorin-router"
 		;;
 	esac
 

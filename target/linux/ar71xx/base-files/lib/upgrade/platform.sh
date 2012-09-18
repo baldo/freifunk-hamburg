@@ -73,8 +73,9 @@ platform_check_image() {
 	[ "$ARGC" -gt 1 ] && return 1
 
 	case "$board" in
+	all0315n | \
 	all0258n )
-		platform_check_image_all0258n "$1" && return 0
+		platform_check_image_allnet "$1" && return 0
 		return 1
 		;;
 	alfa-ap96 | \
@@ -94,17 +95,21 @@ platform_check_image() {
 		}
 		return 0
 		;;
-	ew-dorin | \
 	ap81 | \
 	ap83 | \
 	dir-600-a1 | \
 	dir-615-c1 | \
 	dir-615-e4 | \
 	dir-825-b1 | \
+	dir-825-b1-openwrt | \
+	dir-825-b1-tostock | \
+	ew-dorin | \
+	ew-dorin-router | \
 	mzk-w04nu | \
 	mzk-w300nh | \
 	tew-632brp | \
 	tew-673gru | \
+	tew-712br | \
 	wrt400n | \
 	airrouter | \
 	bullet-m | \
@@ -118,6 +123,7 @@ platform_check_image() {
 	whr-g301n | \
 	whr-hp-g300n | \
 	whr-hp-gn | \
+	wlae-ag300n | \
 	nbg460n_550n_550nh | \
 	unifi )
 		[ "$magic" != "2705" ] && {
@@ -187,6 +193,7 @@ platform_check_image() {
 	ls-sr71 | \
 	pb42 | \
 	pb44 | \
+	all0305 | \
 	eap7660d | \
 	ja76pf | \
 	ja76pf2)
@@ -219,6 +226,7 @@ platform_do_upgrade() {
 	routerstation | \
 	routerstation-pro | \
 	ls-sr71 | \
+	all0305 | \
 	eap7660d | \
 	pb42 | \
 	pb44 | \
@@ -227,7 +235,10 @@ platform_do_upgrade() {
 		platform_do_upgrade_combined "$ARGV"
 		;;
 	all0258n )
-		platform_do_upgrade_all0258n "$ARGV"
+		platform_do_upgrade_allnet "0x9f050000" "$ARGV"
+		;;
+	all0315n )
+		platform_do_upgrade_allnet "0x9f080000" "$ARGV"
 		;;
 	om2p | \
 	om2p-lc)

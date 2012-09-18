@@ -15,12 +15,15 @@ ucidef_set_interface_loopback
 board=$(ar71xx_board_name)
 
 case "$board" in
+all0315n |\
 all0258n |\
 ja76pf2)
 	ucidef_set_interface_lan "eth0 eth1"
 	;;
 
-db120)
+db120 |\
+rb-2011l | \
+rb-2011uas-2hnd)
 	ucidef_set_interfaces_lan_wan "eth0.1 eth1" "eth0.2"
 	ucidef_add_switch "eth0" "1" "1"
 	ucidef_add_switch_vlan "eth0" "1" "0t 2 3 4 5"
@@ -30,6 +33,8 @@ db120)
 	;;
 
 dir-825-b1|\
+dir-825-b1-openwrt|\
+dir-825-b1-tostock|\
 tew-673gru)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth1"
 	ucidef_add_switch "rtl8366s" "1" "1"
@@ -130,9 +135,11 @@ wzr-hp-g300nh)
 	ucidef_add_switch_vlan "switch0" "1" "0 1 2 3 5t"
 	;;
 
+all0305 |\
 aw-nr580 |\
 bullet-m |\
 eap7660d |\
+ew-dorin |\
 rb-411 |\
 tl-mr11u |\
 tl-mr3020 |\
@@ -165,6 +172,7 @@ ja76pf |\
 rb-750 |\
 rb-751 |\
 tew-632brp |\
+tew-712br |\
 tl-mr3220 |\
 tl-mr3420 |\
 tl-wr741nd |\
@@ -186,7 +194,7 @@ wzr-hp-g450h)
 	ucidef_add_switch_vlan "eth0" "2" "0t 1"
 	;;
 
-ew-dorin)
+ew-dorin-router)
 	ucidef_set_interfaces_lan_wan "eth0" "eth1"
 	ucidef_add_switch "eth0" "1" "1"
 	ucidef_add_switch_vlan "eth0" "1" "0 2 3"

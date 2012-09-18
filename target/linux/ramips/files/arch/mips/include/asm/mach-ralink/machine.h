@@ -23,10 +23,12 @@ enum ramips_mach_type {
 	/* RT3050 based machines */
 	RAMIPS_MACH_3G_6200N,		/* Edimax 3G-6200N */
 	RAMIPS_MACH_ALL0256N,		/* Allnet ALL0256N */
+	RAMIPS_MACH_CARAMBOLA,		/* 8devices Carambola */
 	RAMIPS_MACH_DIR_300_B1,		/* D-Link DIR-300 B1 */
 	RAMIPS_MACH_DIR_600_B1,		/* D-Link DIR-600 B1 */
 	RAMIPS_MACH_DIR_600_B2,		/* D-Link DIR-600 B2 */
 	RAMIPS_MACH_DIR_615_D,		/* D-Link DIR-615 D */
+	RAMIPS_MACH_DIR_620_A1,		/* D-Link DIR-620 A1 */
 	RAMIPS_MACH_RT_G32_B1,		/* Asus RT-G32 B1 */
 	RAMIPS_MACH_RT_N10_PLUS,	/* Asus RT-N10+ */
 	RAMIPS_MACH_NW718,		/* Netcore NW718 */
@@ -34,8 +36,10 @@ enum ramips_mach_type {
 	RAMIPS_MACH_WL_330N3G,		/* Asus WL-330N3G */
 
 	/* RT3052 based machines */
+	RAMIPS_MACH_ALL0239_3G,		/* ALL0239-3G */
 	RAMIPS_MACH_ARGUS_ATP52B,	/* Argus ATP-52B */
 	RAMIPS_MACH_BC2,		/* NexAira BC2 */
+	RAMIPS_MACH_DAP_1350,		/* D-Link DAP-1350 */
 	RAMIPS_MACH_ESR_9753,		/* Senao / EnGenius ESR-9753*/
 	RAMIPS_MACH_F5D8235_V2,         /* Belkin F5D8235 v2 */
 	RAMIPS_MACH_FONERA20N,		/* La Fonera 2.0N */
@@ -58,6 +62,10 @@ enum ramips_mach_type {
 	RAMIPS_MACH_WR6202,		/* Accton WR6202 */
 	RAMIPS_MACH_XDXRN502J,          /* unknown XDX-RN502J */
 	RAMIPS_MACH_UR_336UN,		/* UPVEL ROUTER */
+	
+	/* RT3352 based machines */
+	RAMIPS_MACH_ALL5002,		/* Allnet ALL5002 */
+	RAMIPS_MACH_DIR_615_H1,
 
 	/* RT3662 based machines */
 	RAMIPS_MACH_RT_N56U,		/* Asus RT-N56U */

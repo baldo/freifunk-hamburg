@@ -289,7 +289,7 @@ define KernelPackage/ipsec4/description
  Includes:
  - ah4
  - esp4
- - ipcomp
+ - ipcomp4
  - xfrm4_mode_beet
  - xfrm4_mode_transport
  - xfrm4_mode_tunnel

@@ -2,6 +2,11 @@ if RALINK_RT305X
 
 menu "Ralink RT350x machine selection"
 
+config RT305X_MACH_CARAMBOLA
+	bool "8devices Carambola dev board support"
+	select RALINK_DEV_GPIO_BUTTONS
+	select RALINK_DEV_GPIO_LEDS
+
 config RT305X_MACH_3G_6200N
 	bool "Edimax 3G-6200N board support"
 	select RALINK_DEV_GPIO_BUTTONS
@@ -14,6 +19,11 @@ config RT305X_MACH_WR6202
 
 config RT305X_MACH_ALL0256N
 	bool "Allnet ALL0256N support"
+	select RALINK_DEV_GPIO_BUTTONS
+	select RALINK_DEV_GPIO_LEDS
+
+config RT305X_MACH_ALL5002
+	bool "Allnet ALL5002 support"
 	select RALINK_DEV_GPIO_BUTTONS
 	select RALINK_DEV_GPIO_LEDS
 
@@ -63,6 +73,16 @@ config RT305X_MACH_WHR_G300N
 
 config RT305X_MACH_DIR_300_REVB
 	bool "D-Link DIR-300 revB board support"
+	select RALINK_DEV_GPIO_BUTTONS
+	select RALINK_DEV_GPIO_LEDS
+
+config RT305X_MACH_DIR_615_H1
+	bool "D-Link DIR-615 H1 board support"
+	select RALINK_DEV_GPIO_BUTTONS
+	select RALINK_DEV_GPIO_LEDS
+
+config RT305X_MACH_DAP_1350
+	bool "D-Link DAP-1350 board support"
 	select RALINK_DEV_GPIO_BUTTONS
 	select RALINK_DEV_GPIO_LEDS
 

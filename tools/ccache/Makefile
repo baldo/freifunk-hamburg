@@ -17,6 +17,9 @@ PKG_CAT:=xzcat
 
 include $(INCLUDE_DIR)/host-build.mk
 
+HOST_LDFLAGS += $(HOST_STATIC_LINKING)
+HOST_CONFIGURE_VARS += CC="$(HOSTCC_NOCACHE)"
+
 define Host/Install/ccache
 	$(INSTALL_DIR) $(STAGING_DIR_HOST)/bin/
 	$(CP) ./files/* $(STAGING_DIR_HOST)/bin/

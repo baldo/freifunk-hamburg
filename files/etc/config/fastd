@@ -3,7 +3,7 @@ package fastd
 config fastd ffhl_mesh_vpn
 	option enabled 0
 	
-	list config '/etc/fastd/ffhl-mesh-vpn/up.conf'
+	list config '/lib/freifunk/mesh-vpn-up.conf'
 	list config_peer_dir '/etc/fastd/ffhl-mesh-vpn/peers'
 
 	option syslog_level 'verbose'

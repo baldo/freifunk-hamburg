@@ -7,7 +7,7 @@ KEEP_VERSION_FILE=/etc/.freifunk_version_keep
 KEEP_VERSION_FILE_LFF=/etc/.lff_version_keep
 KEEP_VERSION_FILE_KFF=/etc/.kff_version_keep
 
-UPGRADE_DIR=/lib/upgrade/freifunk
+UPGRADE_DIR=/lib/freifunk/upgrade
 
 
 newer_than() {

@@ -1,13 +1,15 @@
 #!/bin/sh
 
-uci -q get network.freifunk.macaddr >/dev/null && exit 0
+get_main_address() {
+    case "$board" in
+	tl-wdr3600|tl-wdr4300)
+	    uci get wireless.radio1.macaddr
+	    ;;
+	*)
+	    uci get wireless.radio0.macaddr
+	    ;;
+    esac
+}
 
-local ifname=$(uci -q get network.freifunk.ifname | sed -e 's/ .*//')
-local baseif=$(echo $ifname | sed -e 's/\..*//')
-
-[ "$baseif" ] || exit 1
-
-local ffaddr=$(cat /sys/class/net/$baseif/address)
-
-uci set network.freifunk.macaddr=$ffaddr
+uci set network.freifunk.macaddr=$(get_main_address)
 uci commit network

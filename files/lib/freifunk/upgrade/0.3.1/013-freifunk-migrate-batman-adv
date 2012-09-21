@@ -1,0 +1,11 @@
+#!/bin/sh
+
+local interfaces=''
+local interfaces_old="$(uci get batman-adv.bat0.interfaces)"
+
+for interface in $interfaces_old; do
+	if [ $interface != br-wan ]; then interfaces="${interfaces:+${interfaces} }$interface"; fi
+done
+
+uci set batman-adv.bat0.interfaces="$interfaces"
+uci commit batman-adv

@@ -11,6 +11,8 @@ get_main_address() {
     esac
 }
 
-uci set network.freifunk.peerdns='0'
+uci set network.freifunk.proto='none'
+uci set network.freifunk.auto='1'
+uci set network.freifunk.accept_ra='1'
 uci set network.freifunk.macaddr=$(get_main_address)
 uci commit network

@@ -1,6 +1,6 @@
 
 config 'mesh' 'bat0'
-	option 'interfaces' 'mesh br-wan'
+	option 'interfaces' 'mesh'
 	option 'aggregated_ogms'
 	option 'ap_isolation'
 	option 'bonding'

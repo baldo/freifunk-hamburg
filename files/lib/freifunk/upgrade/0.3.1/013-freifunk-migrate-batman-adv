@@ -8,4 +8,10 @@ for interface in $interfaces_old; do
 done
 
 uci set batman-adv.bat0.interfaces="$interfaces"
+
+old_interval="$(uci -q get batman-adv.bat0.orig_interval)"
+if [ -z "$old_interval" -o "$old_interval" = 1000 ]; then
+	uci set batman-adv.bat0.orig_interval=5000
+fi
+
 uci commit batman-adv

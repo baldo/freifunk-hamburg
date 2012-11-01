@@ -11,7 +11,7 @@ include $(INCLUDE_DIR)/kernel.mk
 PKG_NAME:=mac80211
 
 PKG_VERSION:=2012-09-07
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_SOURCE_URL:=http://mirror2.openwrt.org/sources
 PKG_MD5SUM:=59e0a114ee4b755a6e47cb6cd0f32ebc
 
@@ -49,13 +49,13 @@ define KernelPackage/mac80211/Default
   SUBMENU:=$(WMENU)
   URL:=http://linuxwireless.org/
   MAINTAINER:=Felix Fietkau <nbd@openwrt.org>
-  DEPENDS:=@(!(TARGET_avr32||TARGET_ep93xx||TARGET_ps3||TARGET_pxcab)||BROKEN)
+  DEPENDS:=@(!(TARGET_avr32||TARGET_ps3||TARGET_pxcab)||BROKEN)
 endef
 
 define KernelPackage/cfg80211
   $(call KernelPackage/mac80211/Default)
   TITLE:=cfg80211 - wireless configuration API
-  DEPENDS+= +wireless-tools +iw
+  DEPENDS+= +iw
   FILES:= \
 	$(PKG_BUILD_DIR)/compat/compat.ko \
 	$(PKG_BUILD_DIR)/net/wireless/cfg80211.ko
@@ -634,7 +634,7 @@ define KernelPackage/iwlagn
   DEPENDS:= +kmod-mac80211 @PCI_SUPPORT
   TITLE:=Intel AGN Wireless support
   FILES:=$(PKG_BUILD_DIR)/drivers/net/wireless/iwlwifi/iwlwifi.ko
-  AUTOLOAD:=$(call AutoLoad,60,iwlagn)
+  AUTOLOAD:=$(call AutoLoad,60,iwlwifi)
   MENU:=1
 endef
 
@@ -710,7 +710,7 @@ define KernelPackage/iwl-legacy
   DEPENDS:= +kmod-mac80211 @PCI_SUPPORT
   TITLE:=Intel legacy Wireless support
   FILES:=$(PKG_BUILD_DIR)/drivers/net/wireless/iwlegacy/iwlegacy.ko
-  AUTOLOAD:=$(call AutoLoad,60,iwl-legacy)
+  AUTOLOAD:=$(call AutoLoad,60,iwlegacy)
 endef
 
 define KernelPackage/iwl-legacy/description
@@ -977,6 +977,8 @@ define KernelPackage/b43/config
 		    G  => G-PHY
 		    LP => LP-PHY
 		    N  => N-PHY
+		    HT  => HT-PHY
+		    LCN  => LCN-PHY
 
 		  Example (keep files for G-PHY only):
 		    G
@@ -1341,7 +1343,7 @@ endef
 ifneq ($(CONFIG_PACKAGE_kmod-cfg80211)$(CONFIG_PACKAGE_kmod-lib80211),)
  define Build/Compile/kmod
 	rm -rf $(PKG_BUILD_DIR)/modules
-	$(MAKE) $(PKG_JOBS) -C "$(PKG_BUILD_DIR)" $(MAKE_OPTS) modules
+	+$(MAKE) $(PKG_JOBS) -C "$(PKG_BUILD_DIR)" $(MAKE_OPTS) modules
  endef
 endif
 

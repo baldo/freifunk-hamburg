@@ -59,7 +59,7 @@ CONFIGURE_VARS+= \
 	ac_cv_search_tgetent="$(TARGET_LDFLAGS) -lncurses -lreadline"
 
 define Build/Compile
-	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
+	+$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
 		DESTDIR="$(PKG_INSTALL_DIR)" \
 		CPPFLAGS="$(TARGET_CPPFLAGS)" \
 		all
@@ -77,6 +77,10 @@ endef
 define Package/gdbserver/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/gdbserver $(1)/usr/bin/
+ifneq ($(CONFIG_USE_EGLIBC),)
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) $(TOOLCHAIN_DIR)/lib/libthread_db* $(1)/usr/lib
+endif
 endef
 
 $(eval $(call BuildPackage,gdb))

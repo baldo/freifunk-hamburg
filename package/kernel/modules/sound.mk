@@ -7,21 +7,6 @@
 
 SOUND_MENU:=Sound Support
 
-define KernelPackage/pcspkr
-  SUBMENU:=$(SOUND_MENU)
-  TITLE:=PC speaker support
-  KCONFIG:=CONFIG_INPUT_PCSPKR
-  FILES:=$(LINUX_DIR)/drivers/input/misc/pcspkr.ko
-  AUTOLOAD:=$(call AutoLoad,50,pcspkr)
-endef
-
-define KernelPackage/pcspkr/description
- This enables sounds (tones) through the pc speaker
-endef
-
-$(eval $(call KernelPackage,pcspkr))
-
-
 # allow targets to override the soundcore stuff
 SOUNDCORE_LOAD ?= \
 	soundcore \
@@ -182,3 +167,43 @@ define KernelPackage/sound-soc-ac97
 endef
 
 $(eval $(call KernelPackage,sound-soc-ac97))
+
+
+define KernelPackage/sound-soc-gw_avila
+  TITLE:=Gateworks Avila SoC sound support
+  KCONFIG:= \
+	CONFIG_SND_GW_AVILA_SOC \
+	CONFIG_SND_GW_AVILA_SOC_PCM \
+	CONFIG_SND_GW_AVILA_SOC_HSS
+  FILES:= \
+	$(LINUX_DIR)/sound/soc/codecs/snd-soc-tlv320aic3x.ko \
+	$(LINUX_DIR)/sound/soc/gw-avila/snd-soc-gw-avila.ko \
+	$(LINUX_DIR)/sound/soc/gw-avila/snd-soc-gw-avila-pcm.ko \
+	$(LINUX_DIR)/sound/soc/gw-avila/snd-soc-gw-avila-hss.ko
+  AUTOLOAD:=$(call AutoLoad,65,snd-soc-tlv320aic3x snd-soc-gw-avila snd-soc-gw-avila-pcm snd-soc-gw-avila-hss)
+  DEPENDS:=@TARGET_ixp4xx +kmod-sound-soc-core
+  $(call AddDepends/sound)
+endef
+
+$(eval $(call KernelPackage,sound-soc-gw_avila))
+
+
+define KernelPackage/pcspkr
+  DEPENDS:=@!TARGET_x86
+  TITLE:=PC speaker support
+  KCONFIG:= \
+	CONFIG_INPUT_PCSPKR \
+	CONFIG_SND_PCSP
+  FILES:= \
+	$(LINUX_DIR)/drivers/input/misc/pcspkr.ko \
+	$(LINUX_DIR)/sound/drivers/pcsp/snd-pcsp.ko
+  AUTOLOAD:=$(call AutoLoad,50,pcspkr snd-pcsp)
+  $(call AddDepends/input)
+  $(call AddDepends/sound)
+endef
+
+define KernelPackage/pcspkr/description
+ This enables sounds (tones) through the pc speaker
+endef
+
+$(eval $(call KernelPackage,pcspkr))

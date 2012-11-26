@@ -8,7 +8,7 @@ config fastd mesh_vpn
 
 	option syslog_level 'verbose'
 
-	option method 'xsalsa20-poly1305'
+	list method 'xsalsa20-poly1305'
 	option mode 'tap'
 	
 	option interface 'mesh-vpn'

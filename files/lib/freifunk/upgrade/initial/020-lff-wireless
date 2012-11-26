@@ -4,9 +4,15 @@ uci -q batch <<EOF
 delete wireless.radio0.disabled
 delete wireless.@wifi-iface[0]
 
+delete wireless.radio1.disabled
+delete wireless.@wifi-iface[0]
+
 set wireless.radio0.channel='1'
 set wireless.radio0.htmode='HT40+'
 set wireless.radio0.country='DE'
+set wireless.radio1.channel='44'
+set wireless.radio1.htmode='HT40+'
+set wireless.radio1.country='DE'
 
 set wireless.wifi_freifunk='wifi-iface'
 set wireless.wifi_freifunk.device='radio0'
@@ -20,6 +26,19 @@ set wireless.wifi_mesh.network='mesh'
 set wireless.wifi_mesh.mode='adhoc'
 set wireless.wifi_mesh.ssid='f8:d1:11:87:52:2e'
 set wireless.wifi_mesh.bssid='f8:d1:11:87:52:2e'
+
+set wireless.wifi_freifunk5='wifi-iface'
+set wireless.wifi_freifunk5.device='radio1'
+set wireless.wifi_freifunk5.network='freifunk'
+set wireless.wifi_freifunk5.mode='ap'
+set wireless.wifi_freifunk5.ssid='hamburg.freifunk.net (5GHz)'
+
+set wireless.wifi_mesh5='wifi-iface'
+set wireless.wifi_mesh5.device='radio1'
+set wireless.wifi_mesh5.network='mesh5'
+set wireless.wifi_mesh5.mode='adhoc'
+set wireless.wifi_mesh5.ssid='f8:d1:11:87:52:2e'
+set wireless.wifi_mesh5.bssid='f8:d1:11:87:52:2e'
 
 commit wireless
 EOF

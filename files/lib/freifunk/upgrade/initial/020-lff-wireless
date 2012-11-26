@@ -12,14 +12,14 @@ set wireless.wifi_freifunk='wifi-iface'
 set wireless.wifi_freifunk.device='radio0'
 set wireless.wifi_freifunk.network='freifunk'
 set wireless.wifi_freifunk.mode='ap'
-set wireless.wifi_freifunk.ssid='luebeck.freifunk.net'
+set wireless.wifi_freifunk.ssid='hamburg.freifunk.net'
 
 set wireless.wifi_mesh='wifi-iface'
 set wireless.wifi_mesh.device='radio0'
 set wireless.wifi_mesh.network='mesh'
 set wireless.wifi_mesh.mode='adhoc'
-set wireless.wifi_mesh.ssid='02:d1:11:37:fc:38'
-set wireless.wifi_mesh.bssid='02:d1:11:37:fc:38'
+set wireless.wifi_mesh.ssid='f8:d1:11:87:52:2e'
+set wireless.wifi_mesh.bssid='f8:d1:11:87:52:2e'
 
 commit wireless
 EOF

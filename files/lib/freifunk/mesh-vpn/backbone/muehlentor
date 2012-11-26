@@ -1,2 +1,2 @@
-key "bd4ec3cf87bb0042eed2fa121fbc402154d28fb1ae9dff9cdb71bb21892f401a";
-remote ipv4 "muehlentor.mesh.ffhl.chaotikum.org" port 10000;
+key "b9bc7265c5685e1f49cefaae96d00e2cc62af76a663afd1a3a0bcf081f5131e2";
+remote ipv4 "muehlentor.mesh.ffhl.chaotikum.org" port 10001;

@@ -23,6 +23,10 @@ set network.freifunk.accept_ra='1'
 set network.mesh='interface'
 set network.mesh.proto='none'
 set network.mesh.mtu='1528'
+
+set network.mesh5='interface'
+set network.mesh5.proto='none'
+set network.mesh5.mtu='1528'
 EOF
 
 get_main_address() {

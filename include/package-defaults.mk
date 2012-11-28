@@ -5,8 +5,10 @@
 # See /LICENSE for more information.
 #
 
+PKG_DEFAULT_DEPENDS = +libc +USE_EGLIBC:librt +USE_EGLIBC:libpthread
+
 ifneq ($(PKG_NAME),toolchain)
-  PKG_FIXUP_DEPENDS = $(if $(filter kmod-%,$(1)),$(2),+libc $(filter-out +libc,$(2)))
+  PKG_FIXUP_DEPENDS = $(if $(filter kmod-%,$(1)),$(2),$(PKG_DEFAULT_DEPENDS) $(filter-out $(PKG_DEFAULT_DEPENDS),$(2)))
 else
   PKG_FIXUP_DEPENDS = $(2)
 endif
@@ -127,7 +129,7 @@ MAKE_INSTALL_FLAGS = \
 MAKE_PATH = .
 
 define Build/Compile/Default
-	$(MAKE_VARS) \
+	+$(MAKE_VARS) \
 	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR)/$(MAKE_PATH) \
 		$(MAKE_FLAGS) \
 		$(1);

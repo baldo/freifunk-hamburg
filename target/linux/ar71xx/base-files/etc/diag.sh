@@ -54,6 +54,9 @@ get_status_led() {
 	bullet-m | rocket-m | nano-m | nanostation-m)
 		status_led="ubnt:green:link4"
 		;;
+	cap4200ag)
+		status_led="senao:green:pwr"
+		;;
 	db120)
 		status_led="db120:green:status"
 		;;
@@ -64,9 +67,7 @@ get_status_led() {
 	dir-615-c1)
 		status_led="d-link:green:status"
 		;;
-	dir-825-b1 |\
-	dir-825-b1-openwrt |\
-	dir-825-b1-stock)
+	dir-825-b1)
 		status_led="d-link:orange:power"
 		;;
 	eap7660d)
@@ -90,6 +91,7 @@ get_status_led() {
 		status_led="nbg460n:green:power"
 		;;
 	om2p | \
+	om2p-hs | \
 	om2p-lc)
 		status_led="om2p:blue:power"
 		;;
@@ -130,6 +132,7 @@ get_status_led() {
 	tl-wr741nd-v4 | \
 	tl-wr841n-v1 | \
 	tl-wr841n-v7 | \
+	tl-wr841n-v8 | \
 	tl-wr941nd)
 		status_led="tp-link:green:system"
 		;;

@@ -96,12 +96,15 @@ static int do_ioctl(int cmd)
 static u16 mdio_read(__u16 phy_id, __u8 reg)
 {
 	struct mii_ioctl_data *mii = if_mii(&robo.ifr);
+	int err;
+
 	mii->phy_id = phy_id;
 	mii->reg_num = reg;
 
-	if (do_ioctl(SIOCGMIIREG) < 0) {
+	err = do_ioctl(SIOCGMIIREG);
+	if (err < 0) {
 		printk(KERN_ERR PFX
-		       "[%s:%d] SIOCGMIIREG failed!\n", __FILE__, __LINE__);
+		       "[%s:%d] SIOCGMIIREG failed! err: %i\n", __FILE__, __LINE__, err);
 
 		return 0xffff;
 	}
@@ -112,14 +115,16 @@ static u16 mdio_read(__u16 phy_id, __u8 reg)
 static void mdio_write(__u16 phy_id, __u8 reg, __u16 val)
 {
 	struct mii_ioctl_data *mii = if_mii(&robo.ifr);
+	int err;
 
 	mii->phy_id = phy_id;
 	mii->reg_num = reg;
 	mii->val_in = val;
 
-	if (do_ioctl(SIOCSMIIREG) < 0) {
+	err = do_ioctl(SIOCSMIIREG);
+	if (err < 0) {
 		printk(KERN_ERR PFX
-		       "[%s:%d] SIOCSMIIREG failed!\n", __FILE__, __LINE__);
+		       "[%s:%d] SIOCSMIIREG failed! err: %i\n", __FILE__, __LINE__, err);
 		return;
 	}
 }
@@ -262,6 +267,10 @@ static int robo_probe(char *devname)
 
 	if ((robo.dev = dev_get_by_name(&init_net, devname)) == NULL) {
 		printk("No such device\n");
+		return 1;
+	}
+	if (!robo.dev->netdev_ops || !robo.dev->netdev_ops->ndo_do_ioctl) {
+		printk("ndo_do_ioctl not implemented in ethernet driver\n");
 		return 1;
 	}
 

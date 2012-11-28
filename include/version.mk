@@ -15,16 +15,16 @@ PKG_CONFIG_DEPENDS += \
 	CONFIG_VERSION_DIST
 
 VERSION_NUMBER:=$(call qstrip,$(CONFIG_VERSION_NUMBER))
-VERSION_NUMBER:=$(if $(VERSION_NUMBER),$(VERSION_NUMBER),$(REVISION))
+VERSION_NUMBER:=$(if $(VERSION_NUMBER),$(VERSION_NUMBER),12.09-rc1)
 
 VERSION_CODE:=$(call qstrip,$(CONFIG_VERSION_NUMBER))
-VERSION_CODE:=$(if $(VERSION_CODE),$(VERSION_CODE),Bleeding Edge)
+VERSION_CODE:=$(if $(VERSION_CODE),$(VERSION_CODE),Attitude Adjustment)
 
 VERSION_NICK:=$(call qstrip,$(CONFIG_VERSION_NICK))
 VERSION_NICK:=$(if $(VERSION_NICK),$(VERSION_NICK),$(RELEASE))
 
 VERSION_REPO:=$(call qstrip,$(CONFIG_VERSION_REPO))
-VERSION_REPO:=$(if $(VERSION_REPO),$(VERSION_REPO),http://downloads.openwrt.org/snapshots/trunk/%T/packages)
+VERSION_REPO:=$(if $(VERSION_REPO),$(VERSION_REPO),http://downloads.openwrt.org/attitude_adjustment/12.09-rc1/%S/packages)
 
 VERSION_DIST:=$(call qstrip,$(CONFIG_VERSION_DIST))
 VERSION_DIST:=$(if $(VERSION_DIST),$(VERSION_DIST),OpenWrt)
@@ -40,4 +40,4 @@ VERSION_SED:=$(SED) 's,%U,$(VERSION_REPO),g' \
 	-e 's,%d,\L$(subst $(space),_,$(VERSION_DIST)),g' \
 	-e 's,%R,$(REVISION),g' \
 	-e 's,%T,$(BOARD),g' \
-	-e 's,%S,$(BOARD)$(if $(SUBTARGET),/$(SUBTARGET)),g' \
+	-e 's,%S,$(BOARD)/$(if $(SUBTARGET),$(SUBTARGET),generic),g' \

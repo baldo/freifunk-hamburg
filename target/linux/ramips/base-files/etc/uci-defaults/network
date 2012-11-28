@@ -18,6 +18,7 @@ ramips_setup_rt3x5x_vlans()
 	fi
 	local wanports=""
 	local lanports=""
+	swconfig dev rt305x set reset 1
 	for port in 5 4 3 2 1 0; do
 		if [ `swconfig dev rt305x port $port get disable` = "1" ]; then
 			continue
@@ -62,6 +63,13 @@ ramips_setup_interfaces()
 		ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
 		;;
 
+	dir-645)
+		ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
+		ucidef_add_switch "switch0" "1" "1"
+		ucidef_add_switch_vlan "switch0" "1" "1 2 3 4 6t"
+		ucidef_add_switch_vlan "switch0" "2" "0 6t"
+		;;
+
 	f5d8235-v1 | \
 	f5d8235-v2 | \
 	ur-336un)
@@ -90,6 +98,14 @@ ramips_setup_interfaces()
 		ucidef_add_switch_vlan "switch0" "2" "4 8t"
 		;;
 
+	tew-691gr|\
+	tew-692gr)
+		ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
+		ucidef_add_switch "switch0" "1" "1"
+		ucidef_add_switch_vlan "switch0" "1" "0t 1 2 3 4"
+		ucidef_add_switch_vlan "switch0" "2" "0t 5"
+		;;
+
 	freestation5 | \
 	wcr-150gn)
 		ucidef_set_interfaces_lan_wan "eth0.2" "eth0.1"
@@ -100,7 +116,7 @@ ramips_setup_interfaces()
 		;;
 
 	*)
-		RT3X5X=`cat /proc/cpuinfo | grep RT3.5`
+		RT3X5X=`cat /proc/cpuinfo | egrep "(RT3.5|RT5350)"`
 		if [ -n "${RT3X5X}" ]; then
 			ramips_setup_rt3x5x_vlans
 		else
@@ -158,6 +174,11 @@ ramips_setup_macs()
 		wan_mac=$(/usr/sbin/maccalc add "$lan_mac" 1)
 		;;
 
+	dir-645)
+		lan_mac=$(ramips_get_mac_nvram nvram lanmac)
+		wan_mac=$(ramips_get_mac_nvram nvram wanmac)
+		;;
+
 	esr-9753 | \
 	ur-336un)
 		lan_mac=$(ramips_get_mac_binary devdata 16388)
@@ -178,6 +199,16 @@ ramips_setup_macs()
 	rt-n56u)
 		lan_mac=$(ramips_get_mac_binary factory 4)
 		wan_mac=$(ramips_get_mac_binary factory 32772)
+		;;
+
+	tew-691gr)
+		lan_mac=$(ramips_get_mac_binary factory 40)
+		wan_mac=$(/usr/sbin/maccalc add "$lan_mac" 3)
+		;;
+
+	tew-692gr)
+		lan_mac=$(ramips_get_mac_binary factory 40)
+		wan_mac=$(/usr/sbin/maccalc add "$lan_mac" 4)
 		;;
 
 	all0239-3g | \

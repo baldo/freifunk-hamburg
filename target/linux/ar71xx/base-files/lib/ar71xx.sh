@@ -189,6 +189,9 @@ ar71xx_board_detect() {
 	*AW-NR580)
 		name="aw-nr580"
 		;;
+	*CAP4200AG)
+		name="cap4200ag"
+		;;
 	*"DB120 reference board")
 		name="db120"
 		;;
@@ -200,12 +203,6 @@ ar71xx_board_detect() {
 		;;
 	*"DIR-825 rev. B1")
 		name="dir-825-b1"
-		;;
-	*"DIR-825 rev. B1 OpenWrt")
-		name="dir-825-b1-openwrt"
-		;;
-	*"DIR-825 rev. B1 TOSTOCK")
-		name="dir-825-b1-tostock"
 		;;
 	*EAP7660D)
 		name="eap7660d"
@@ -242,6 +239,9 @@ ar71xx_board_detect() {
 		;;
 	*OM2P)
 		name="om2p"
+		;;
+	*"OM2P HS")
+		name="om2p-hs"
 		;;
 	*"OM2P LC")
 		name="om2p-lc"
@@ -333,6 +333,9 @@ ar71xx_board_detect() {
 	*TL-MR3020)
 		name="tl-mr3020"
 		;;
+	*TL-MR3040)
+		name="tl-mr3040"
+		;;
 	*TL-MR3220)
 		name="tl-mr3220"
 		;;
@@ -359,6 +362,9 @@ ar71xx_board_detect() {
 		;;
 	*"TL-WR841N/ND v7")
 		name="tl-wr841n-v7"
+		;;
+	*"TL-WR841N/ND v8")
+		name="tl-wr841n-v8"
 		;;
 	*TL-WR941ND)
 		name="tl-wr941nd"

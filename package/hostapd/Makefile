@@ -17,7 +17,7 @@ PKG_SOURCE_URL:=git://w1.fi/srv/git/hostap.git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=$(PKG_REV)
 PKG_SOURCE_PROTO:=git
-PKG_MIRROR_MD5SUM:=2732dbca58b0aaaebdad69e13588d058
+PKG_MIRROR_MD5SUM:=fa3227c146cb50732fe8511ce6d1d862
 
 PKG_BUILD_PARALLEL:=1
 
@@ -238,6 +238,7 @@ define Build/RunMake
 		$(TARGET_CONFIGURE_OPTS) \
 		$(DRIVER_MAKEOPTS) \
 		LIBS="$(TARGET_LDFLAGS)" \
+		BCHECK= \
 		$(2)
 endef
 
@@ -247,12 +248,12 @@ define Build/Compile/wpad
 		$(call Build/RunMake,wpa_supplicant,-s MULTICALL=1 dump_cflags) | \
 		sed -e 's,-n ,,g' -e 's,$(TARGET_CFLAGS),,' \
 	` > $(PKG_BUILD_DIR)/.cflags
-	$(call Build/RunMake,hostapd, \
+	+$(call Build/RunMake,hostapd, \
 		CFLAGS="$$$$(cat $(PKG_BUILD_DIR)/.cflags)" \
 		MULTICALL=1 \
 		hostapd_cli hostapd_multi.a \
 	)
-	$(call Build/RunMake,wpa_supplicant, \
+	+$(call Build/RunMake,wpa_supplicant, \
 		CFLAGS="$$$$(cat $(PKG_BUILD_DIR)/.cflags)" \
 		MULTICALL=1 \
 		wpa_cli wpa_supplicant_multi.a \

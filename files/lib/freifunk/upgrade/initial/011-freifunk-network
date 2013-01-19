@@ -21,8 +21,14 @@ set network.freifunk.auto='1'
 set network.freifunk.accept_ra='1'
 
 set network.mesh='interface'
-set network.mesh.proto='none'
+set network.mesh.proto='batadv'
 set network.mesh.mtu='1528'
+set network.mesh.mesh='bat0'
+
+set network.mesh_vpn='interface'
+set network.mesh_vpn.ifname='mesh-vpn'
+set network.mesh_vpn.proto='batadv'
+set network.mesh_vpn.mesh='bat0'
 EOF
 
 get_main_address() {
@@ -36,18 +42,23 @@ get_main_address() {
     esac
 }
 
+local mainaddr=$(get_main_address)
+local oIFS="$IFS"; IFS=":"; set -- $mainaddr; IFS="$oIFS"
+local b2mask=0x02
+
+local vpnaddr=$(printf "%02x:%s:%s:%02x:%s:%s" $(( 0x$1 | $b2mask )) $2 $3 $(( (0x$4 + 1) % 0x100 )) $5 $6)
+
+uci set network.freifunk.macaddr="$mainaddr"
+uci set network.mesh_vpn.macaddr="$vpnaddr"
+
 case "$board" in
 tl-wr1043nd|\
 tl-wdr3600|\
 tl-wdr4300) # fix up duplicate mac addresses
-	local oIFS="$IFS"; IFS=":"; set -- $(get_main_address); IFS="$oIFS"
-	local b2mask=0x02
-
 	local wanaddr=$(printf "%02x:%s:%s:%02x:%s:%02x" $(( 0x$1 | $b2mask )) $2 $3 $(( (0x$4 + 1) % 0x100 )) $5 $(( (0x$6 + 1) % 0x100 )) )
 
 	uci set network.wan.macaddr="$wanaddr"
 	;;
 esac
 
-uci set network.freifunk.macaddr=$(get_main_address)
 uci commit network

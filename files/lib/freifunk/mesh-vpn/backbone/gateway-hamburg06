@@ -1,2 +1,2 @@
-key "2dc0ecf682dd786a4b44f0e4daab052202807adc0227fef64d9ccef0814ce88c"
-remote ipv4 "freifunk-gw06.hamburg.ccc.de" port 10000
+key "2dc0ecf682dd786a4b44f0e4daab052202807adc0227fef64d9ccef0814ce88c";
+remote ipv4 "freifunk-gw06.hamburg.ccc.de" port 10000;

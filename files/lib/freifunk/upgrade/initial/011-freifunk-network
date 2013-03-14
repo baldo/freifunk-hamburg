@@ -8,13 +8,26 @@ local board="$(ar71xx_board_name)"
 uci -q batch <<EOF
 delete network.lan
 
+set network.wan='interface'
 set network.wan.type='bridge'
 set network.wan.proto='dhcp'
 set network.wan.accept_ra='0'
 set network.wan.auto='1'
 
 set network.freifunk='interface'
-set network.freifunk.ifname='$lan_ifname bat0'
+EOF
+
+case "$board" in
+  bullet-m)
+    uci set network.freifunk.ifname="bat0"
+    uci set network.wan.ifname="$lan_ifname"
+    ;;
+  *)
+    uci set network.freifunk.ifname="$lan_ifname bat0"
+    ;;
+esac
+
+uci -q batch <<EOF
 set network.freifunk.type='bridge'
 set network.freifunk.proto='none'
 set network.freifunk.auto='1'

@@ -1,0 +1,2 @@
+rule IN_ONLY --logical-in br-freifunk -j DROP
+rule OUT_ONLY --logical-out br-freifunk -j DROP

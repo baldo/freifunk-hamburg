@@ -20,6 +20,7 @@ set wireless.wifi_mesh.network='mesh'
 set wireless.wifi_mesh.mode='adhoc'
 set wireless.wifi_mesh.ssid='02:d1:11:37:fc:38'
 set wireless.wifi_mesh.bssid='02:d1:11:37:fc:38'
+set wireless.wifi_mesh.mcast_rate='54000'
 
 commit wireless
 EOF

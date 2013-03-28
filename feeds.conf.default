@@ -1,4 +1,4 @@
-src-git packages git://git.metameute.de/lff/pkg;v0.3.x
+src-git packages git://git.metameute.de/lff/pkg;v0.3.2.1
 src-svn luci http://svn.luci.subsignal.org/luci/tags/0.11.1/contrib/package
-src-git fastd git://git.metameute.de/lff/pkg_fastd
-src-git config_mode git://git.metameute.de/lff/pkg_config_mode;v0.3.2
+src-git fastd git://git.metameute.de/lff/pkg_fastd;v8-1
+src-git config_mode git://git.metameute.de/lff/pkg_config_mode;v0.3.2.1

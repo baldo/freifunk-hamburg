@@ -16,7 +16,8 @@
 # $ ./firewall-ebtables stop /lib/freifunk/ebtables/100-mcast-chain
 
 
-START=96
+START=19
+STOP=91
 
 
 exec_file() {

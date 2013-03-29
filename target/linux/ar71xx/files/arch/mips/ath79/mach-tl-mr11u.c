@@ -85,7 +85,8 @@ static void __init common_setup(void)
 	u8 *mac = (u8 *) KSEG1ADDR(0x1f01fc00);
 	u8 *ee = (u8 *) KSEG1ADDR(0x1fff1000);
 
-	ath79_setup_ar933x_phy4_switch(false, true);
+	/* disable PHY_SWAP and PHY_ADDR_SWAP bits */
+	ath79_setup_ar933x_phy4_switch(false, false);
 
 	ath79_register_m25p80(&tl_mr11u_flash_data);
 	ath79_register_leds_gpio(-1, ARRAY_SIZE(tl_mr11u_leds_gpio),
@@ -97,7 +98,6 @@ static void __init common_setup(void)
 
 	ath79_register_mdio(0, 0x0);
 	ath79_register_eth(0);
-	ath79_eth0_data.phy_mask = BIT(0);
 
 	ath79_register_wmac(ee, mac);
 }
@@ -109,8 +109,9 @@ static void __init tl_mr11u_setup(void)
 	ath79_register_gpio_keys_polled(-1, TL_MR11U_KEYS_POLL_INTERVAL,
 					ARRAY_SIZE(tl_mr11u_gpio_keys),
 					tl_mr11u_gpio_keys);
-	ath79_set_usb_power_gpio(TL_MR11U_GPIO_USB_POWER, GPIOF_OUT_INIT_HIGH,
-				"USB power");
+	gpio_request_one(TL_MR11U_GPIO_USB_POWER,
+			 GPIOF_OUT_INIT_HIGH | GPIOF_EXPORT_DIR_FIXED,
+			 "USB power");
 }
 
 MIPS_MACHINE(ATH79_MACH_TL_MR11U, "TL-MR11U", "TP-LINK TL-MR11U",
@@ -122,8 +123,9 @@ static void __init tl_mr3040_setup(void)
 
 	ath79_register_gpio_keys_polled(-1, TL_MR11U_KEYS_POLL_INTERVAL,
 					1, tl_mr11u_gpio_keys);
-	ath79_set_usb_power_gpio(TL_MR3040_GPIO_USB_POWER, GPIOF_OUT_INIT_HIGH,
-				"USB power");
+	gpio_request_one(TL_MR3040_GPIO_USB_POWER,
+			 GPIOF_OUT_INIT_HIGH | GPIOF_EXPORT_DIR_FIXED,
+			 "USB power");
 }
 
 MIPS_MACHINE(ATH79_MACH_TL_MR3040, "TL-MR3040", "TP-LINK TL-MR3040",

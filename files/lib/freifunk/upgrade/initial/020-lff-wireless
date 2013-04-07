@@ -26,6 +26,7 @@ set wireless.wifi_mesh.network='mesh'
 set wireless.wifi_mesh.mode='adhoc'
 set wireless.wifi_mesh.ssid='f8:d1:11:87:52:2e'
 set wireless.wifi_mesh.bssid='f8:d1:11:87:52:2e'
+set wireless.wifi_mesh.mcast_rate='12000'
 
 set wireless.wifi_freifunk5='wifi-iface'
 set wireless.wifi_freifunk5.device='radio1'
@@ -39,6 +40,7 @@ set wireless.wifi_mesh5.network='mesh5'
 set wireless.wifi_mesh5.mode='adhoc'
 set wireless.wifi_mesh5.ssid='f8:d1:11:87:52:2e'
 set wireless.wifi_mesh5.bssid='f8:d1:11:87:52:2e'
+set wireless.wifi_mesh5.mcast_rate='12000'
 
 commit wireless
 EOF

@@ -1,0 +1,1 @@
+*/6 * * * * ethersend br-freifunk 00:00:00:00:00:00 ffff < /dev/null

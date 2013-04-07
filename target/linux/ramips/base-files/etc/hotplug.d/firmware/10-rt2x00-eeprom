@@ -34,7 +34,8 @@ case "$FIRMWARE" in
 	case $board in
 	dir-300-b1 | \
 	dir-600-b1 | \
-	dir-600-b2)
+	dir-600-b2 | \
+	dir-615-d)
 		rt2x00_eeprom_extract "devdata" 16384 272
 		;;
 

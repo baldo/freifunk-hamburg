@@ -1,2 +1,2 @@
 key "a859bd669358c0bbef4f23b3a803bc5cac37a635fec11babacd9278f2ca86841";
-remote ipv4 "freifunk-gw02.hamburg.ccc.de" port 10000;
+remote ipv4 "gw02.hamburg.freifunk.net" port 10000;

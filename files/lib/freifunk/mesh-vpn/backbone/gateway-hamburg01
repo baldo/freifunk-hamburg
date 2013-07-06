@@ -1,4 +1,4 @@
 # Config Datei für die Knoten
 # Dort nach files/lib/freifunk/mesh-vpn/backbone/ kopieren!
 key "cb09c68e2d2f7d374d47035cd532e0a60b8b3a7447aa5a7f76f4f15c8ffa9e58";
-remote ipv4 "freifunk-gw01.hamburg.ccc.de" port 10000;
+remote ipv4 "gw01.hamburg.freifunk.net" port 10000;

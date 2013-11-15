@@ -18,7 +18,7 @@ set network.freifunk='interface'
 EOF
 
 case "$board" in
-  bullet-m)
+  bullet-m|unifi)
     uci set network.freifunk.ifname="bat0"
     uci set network.wan.ifname="$lan_ifname"
     ;;

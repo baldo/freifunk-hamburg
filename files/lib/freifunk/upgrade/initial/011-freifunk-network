@@ -42,6 +42,7 @@ set network.mesh_vpn='interface'
 set network.mesh_vpn.ifname='mesh-vpn'
 set network.mesh_vpn.proto='batadv'
 set network.mesh_vpn.mesh='bat0'
+set network.mesh_vpn.mesh_no_rebroadcast='1'
 EOF
 
 get_main_address() {
